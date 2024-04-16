@@ -5,34 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Login</title>
-  <link rel="stylesheet" href="css/styles.css"> <!-- CSS File -->
+  <!-- CSS File -->
+  <link rel="stylesheet" href="css/styles.css"> 
 </head>
 <body>
   <div class="container">
     <div class="login form">
-      <header>Login</header>
-      <form id="loginForm" action="#">
-        <input type="email" id="loginEmail" placeholder="Enter your email"> <!-- Email input with ID -->
-        <input type="password" id="loginPassword" placeholder="Enter your password"> <!-- Password input with ID -->
-        <a href="#">Forgot password?</a>
-        <input type="submit" class="button" value="Login"> <!-- Changed to submit type -->
-      </form>
-      <div class="signup">
-        <span class="signup">Don't have an account? <a href="signup.html">Signup</a></span>
-      </div>
+        <header>Login</header>
+        <form id="loginForm" action="#">
+            <input type="email" id="loginEmail" placeholder="Enter your email"> <!-- Email input with ID -->
+            <input type="password" id="loginPassword" placeholder="Enter your password"> <!-- Password input with ID -->
+            <a href="#">Forgot password?</a>
+            <input type="submit" class="button" value="Login"> <!-- Changed to submit type -->
+        </form>
+        <!-- Error message div for login -->
+        <div id="loginError" class="error-message"></div>
+        <div class="signup">
+            <span class="signup">Don't have an account? <a href="signup.html">Signup</a></span>
+        </div>
     </div>
   </div>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
-  
+
   <!-- Firebase Configuration -->
   <script src="js/firebase.js"></script>
 
   <!-- JavaScript -->
   <script src="js/scripts.js"></script>
-
 
 </body>
 </html>

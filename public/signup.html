@@ -5,34 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Signup</title>
-  <link rel="stylesheet" href="css/styles.css"> <!-- CSS File -->
+
+  <!-- CSS File -->
+  <link rel="stylesheet" href="css/styles.css"> 
 </head>
 <body>
   <div class="container">
     <div class="registration form">
-      <header>Signup</header>
-      <form id="signupForm" action="#">
-        <input type="text" id="signupName" placeholder="Enter your name"> <!-- Name input with ID -->
-        <input type="email" id="signupEmail" placeholder="Enter your email"> <!-- Email input with ID -->
-        <input type="password" id="signupPassword" placeholder="Create a password"> <!-- Password input with ID -->
-        <input type="password" placeholder="Confirm your password"> <!-- Confirm password input -->
-        <input type="submit" class="button" value="Signup"> <!-- Changed to submit type -->
-      </form>
-      <div class="signup">
-        <span class="signup">Already have an account? <a href="index.html">Login</a></span>
-      </div>
+        <header>Signup</header>
+        <form id="signupForm" action="#">
+            <input type="text" id="signupName" placeholder="Enter your name"> <!-- Name input with ID -->
+            <input type="email" id="signupEmail" placeholder="Enter your email"> <!-- Email input with ID -->
+            <input type="password" id="signupPassword" placeholder="Create a password"> <!-- Password input with ID -->
+            <input type="password" placeholder="Confirm your password"> <!-- Confirm password input -->
+            <input type="submit" class="button" value="Signup"> <!-- Changed to submit type -->
+        </form>
+        <!-- Error message div for signup -->
+        <div id="signupError" class="error-message"></div>
+        <div class="signup">
+            <span class="signup">Already have an account? <a href="index.html">Login</a></span>
+        </div>
     </div>
   </div>
 
-   <!-- Firebase SDKs -->
-   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
-   
-   <!-- Firebase Configuration -->
-   <script src="js/firebase.js"></script>
- 
-   <!-- JavaScript -->
-   <script src="js/scripts.js"></script>
-   
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+  
+  <!-- Firebase Configuration -->
+  <script src="js/firebase.js"></script>
+
+  <!-- JavaScript -->
+  <script src="js/scripts.js"></script>
+
 </body>
 </html>
