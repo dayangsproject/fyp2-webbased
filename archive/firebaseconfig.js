@@ -5,7 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/fireba
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+    apiKey: "",
     authDomain: "test-99503.firebaseapp.com",
     projectId: "test-99503",
     storageBucket: "test-99503.appspot.com",
