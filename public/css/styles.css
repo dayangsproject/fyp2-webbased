@@ -78,7 +78,7 @@ body {
   text-decoration: underline;
 }
 
-.form input.button {
+button.button {
   color: #fff;
   background: #001195;
   font-size: 1.2rem;
@@ -87,11 +87,16 @@ body {
   margin-top: 1.7rem;
   cursor: pointer;
   transition: 0.4s;
+  display: block;
+  width: 100%;
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
+  padding: 10px; /* Adjust padding as needed */
 }
 
-.form input.button:hover {
+button.button:hover {
   background: #b7c6f1;
 }
+
 
 .signup {
   font-size: 17px;
