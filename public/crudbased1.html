@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD function</title>
+    <style>
+        label{
+            display: inline-block;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 110px;
+        }
+
+        input, select{
+            width: 180px;
+            height: 30px;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            height: 30px;
+            width: 72px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <label>Name</label>
+    <input type="text" id="nameInput">
+    <br><br>
+
+    <label>Matric number</label>
+    <input type="number" id="matricNoInput">
+    <br><br>
+
+    <label>Phone umber</label>
+    <input type="number" id="phoneNoInput">
+    <br><br>
+
+    <button id="AddButton">Add</button>
+    <button id="RetButton">Retrieve</button>
+    <button id="UpdButton">Update</button>
+    <button id="DelButton">Delete</button>
+
+
+    <script type="module">
+        // Import firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import{getDatabase, ref, child, get, set, update, remove} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+          authDomain: "test-99503.firebaseapp.com",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test-99503",
+          storageBucket: "test-99503.appspot.com",
+          messagingSenderId: "1017306171186",
+          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get references to Firebase database
+        const db = getDatabase();
+
+        let nameInput = document.getElementById('nameInput');
+        let matricNoInput = document.getElementById('matricNoInput');
+        let phoneNoInput = document.getElementById('phoneNoInput');
+
+        let AddButton = document.getElementById('AddButton');
+        let RetButton = document.getElementById('RetButton');
+        let UpdButton = document.getElementById('UpdButton');
+        let DelButton = document.getElementById('DelButton');
+
+        // function to add student data
+        // using matric to save student data
+        function AddData(){ 
+            set (ref(db, 'StudentInfo/' + matricNoInput.value), {
+                studentName: nameInput.value,
+                matricNo: Number(matricNoInput.value),
+                phoneNo: Number(phoneNoInput.value),
+            })
+            .then(()=>{
+                alert('Data added successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        // function to retrieve data
+        function RetData(){
+            const dbref = ref(db);
+
+            get(child(dbref, 'StudentInfo/' + matricNoInput.value)).then((snapshot) => {
+                if(snapshot.exists()){
+                    nameInput.value = snapshot.val().studentName;
+                    matricNoInput.value = snapshot.val().matricNo;
+                    phoneNoInput.value = snapshot.val().phoneNo;
+                } else {
+                    alert('No data found');
+                }
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            });
+        }
+
+        // function to update student data
+        function UpdateData(){ 
+            update (ref(db, 'StudentInfo/' + matricNoInput.value), {
+                studentName: nameInput.value,
+                matricNo: matricNoInput.value,
+                phoneNo: phoneNoInput.value
+            })
+            .then(()=>{
+                alert('Data updated successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        // function to delete student data
+        function DeleteData(){ 
+            remove (ref(db, 'StudentInfo/' + matricNoInput.value))
+            .then(()=>{
+                alert('Data deleted successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        AddButton.addEventListener('click', AddData);
+        RetButton.addEventListener('click', RetData);
+        UpdButton.addEventListener('click', UpdateData);
+        DelButton.addEventListener('click', DeleteData);
+
+      </script>
+
+</body>
+</html>

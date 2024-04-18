@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD function</title>
+    <style>
+        label{
+            display: inline-block;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 110px;
+        }
+
+        input, select{
+            width: 180px;
+            height: 30px;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            height: 30px;
+            width: 72px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <label>Matric number</label>
+    <input type="number" id="matricNoInput">
+    <br><br>
+
+    <button id="DelButton">Delete</button>
+
+
+    <script type="module">
+        // Import firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import{getDatabase, ref, child, get, set, update, remove} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+          authDomain: "test-99503.firebaseapp.com",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test-99503",
+          storageBucket: "test-99503.appspot.com",
+          messagingSenderId: "1017306171186",
+          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get references to Firebase database
+        const db = getDatabase();
+        let DelButton = document.getElementById('DelButton');
+
+        // function to delete student data
+        function DeleteData(){ 
+            remove (ref(db, 'StudentInfo/' + matricNoInput.value))
+            .then(()=>{
+                alert('Data deleted successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        DelButton.addEventListener('click', DeleteData);
+
+      </script>
+
+</body>
+</html>
