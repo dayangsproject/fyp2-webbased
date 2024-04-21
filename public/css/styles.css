@@ -11,7 +11,7 @@
 body {
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(to bottom, #0d0d88, #ebf0ff);
+  background: #d2ddfa;
 }
 
 .container {
@@ -59,7 +59,7 @@ body {
   padding: 0 15px;
   font-size: 17px;
   margin-bottom: 1.3rem;
-  border: 1px solid #ddd;
+  border: 1px solid #ceccdb; /* Adjusted color */
   border-radius: 6px;
   outline: none;
 }
@@ -70,7 +70,7 @@ body {
 
 .form a {
   font-size: 16px;
-  color: #001195;
+  color: #434273;
   text-decoration: none;
 }
 
@@ -80,7 +80,7 @@ body {
 
 button.button {
   color: #fff;
-  background: #001195;
+  background: #434273;
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 1px;
@@ -94,9 +94,8 @@ button.button {
 }
 
 button.button:hover {
-  background: #b7c6f1;
+  background: #ceccdb; /* Adjusted color */
 }
-
 
 .signup {
   font-size: 17px;
@@ -104,7 +103,7 @@ button.button:hover {
 }
 
 .signup label {
-  color: #001195;
+  color: #434273;
   cursor: pointer;
 }
 

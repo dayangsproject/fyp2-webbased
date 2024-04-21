@@ -8,52 +8,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/sidebar.css" />
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                </li>
+
+    <!-- sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+        <ul class="menu_items">
+            
+            <i id="sidebarOpen"></i>
+
+            <li class="item no-click">
+            <a class="nav_link">
+                <span class="navlink_icon">
+                <i class='bx bx-menu' ></i>
+                </span>
+                <h3>Menu</h3>
+            </a>
+            </li>
+
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-user-circle'></i>
+                </span>
+                <span class="navlink">Profile</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Edit profile</a>
+                <a href="#" class="nav_link sublink">Change password</a>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            </form>
+            </li>
+
+            <li class="item">
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-food-menu'></i>
+                </span>
+                <span class="navlink">Course</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Add course</a>
+                <a href="#" class="nav_link sublink">Edit course</a>
+            </ul>
+            </li>
+
+
+            <li class="item">
+            <a href="#" class="nav_link" id="signOutButton">
+                <span class="navlink_icon">
+                <i class='bx bx-exit' ></i>
+                </span>
+                <span class="navlink">Log Out</span>
+            </a>
+            </li>
+            
+            <li class="item">
+            <a href="#" class="nav_link">
+                <span class="navlink_icon">
+                <i id="darkLight"></i>
+                </span>
+                <span class="navlink"> </span>
+            </a>
+            </li>
+
+        </ul>
+
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+            <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-expand-horizontal'></i>
+            </div>
+            <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-collapse-horizontal' ></i>
+            </div>
         </div>
-    </div>
-</nav>
+        </div>
+    </nav>
 
-<h2 id="msg"></h2>
-<h2 id="greet"></h2>
+    <h2 id="msg"></h2>
+    <h2 id="greet"></h2>
 
-<button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
-<button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
-<button class="btn btn-outline-success" type="button" id="signOutButton">Sign-Out</button>
+    <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
+    <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
+
 
 <script>
+    // function to retrieve the name of the logged-in user
+    // sign out function
+
     let userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
     let userInfo = JSON.parse(sessionStorage.getItem("user-info"));
 
@@ -91,12 +141,15 @@
 
 
 <script type="module">
+    // export to pdf function
+    // export to xlsx function
+    
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-    // Firebase configuration
+    // firebase configuration
     const firebaseConfig = {
-        // Your Firebase config
+        // Firebase config details
         apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
           authDomain: "test-99503.firebaseapp.com",
           databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -107,16 +160,16 @@
           databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
     };
 
-    // Initialize Firebase
+    // initialize Firebase
     const app = initializeApp(firebaseConfig);
 
-    // Get references to Firebase database
+    // get references to Firebase database
     const db = getDatabase();
 
     let exportButton = document.getElementById('exportButton');
     let exportXLSXButton = document.getElementById('exportXLSXButton');
 
-    // Function to retrieve data from Firebase and export to PDF
+    // function to retrieve data from Firebase and export to PDF
     async function exportDataToPDF() {
         const dbRef = ref(db, 'StudentInfo');
         const snapshot = await get(dbRef);
@@ -130,7 +183,7 @@
         }
     }
 
-    // Function to retrieve data from Firebase and export to XLSX
+    // function to retrieve data from Firebase and export to XLSX
     async function exportDataToXLSX() {
         const dbRef = ref(db, 'StudentInfo');
         const snapshot = await get(dbRef);
@@ -158,5 +211,6 @@
     exportButton.addEventListener('click', exportDataToPDF);
     exportXLSXButton.addEventListener('click', exportDataToXLSX);
 </script>
+<script src="js/sidebar.js"></script>
 </body>
 </html>
