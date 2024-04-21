@@ -65,29 +65,37 @@
     let MainForm = document.getElementById('MainForm');
 
     let SignInUser = evt => {
-        evt.preventDefault();
+    evt.preventDefault();
 
-        signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then((credentials)=>{
-            get(child(dbref, 'UsersAuthList/' + credentials.user.uid)).then((snapshot)=>{
-                if(snapshot.exists){
+    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+        .then((userCredential) => {
+            // Retrieve the user's email from the userCredential object
+            const userEmail = userCredential.user.email;
+
+            // Retrieve the user's name from the database
+            get(child(dbref, 'UsersAuthList/' + userCredential.user.uid)).then((snapshot) => {
+                if (snapshot.exists) {
+                    const userName = snapshot.val().name;
+
+                    // Store user info and credentials in session storage
                     sessionStorage.setItem("user-info", JSON.stringify({
-                        name: snapshot.val().name
-                }))
-                
-                sessionStorage.setItem("user-creds", JSON.stringify(credentials.user))
-                window.location.href = 'home.html';
+                        name: userName,
+                        email: userEmail,
+                    }));
+                    sessionStorage.setItem("user-creds", JSON.stringify(userCredential.user));
+
+                    // Redirect to the appropriate page
+                    const firstChar = userEmail.charAt(0);
+                    const redirectPage = !isNaN(firstChar) ? 'home-student.html' : 'home-aa.html';
+                    window.location.href = redirectPage;
                 }
-                /*else{
-                    alert("User not found");
-            }*/
-            })
+            });
         })
-        .catch((error)=>{
+        .catch((error) => {
             alert(error.message);
             console.log(error.code);
             console.log(error.message);
-        })
+        });
     }
 
     MainForm.addEventListener('submit', SignInUser);

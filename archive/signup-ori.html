@@ -1,79 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  </head>
-  <body>
-    
-    <form id="MainForm" class="w-25 m-4">
-        <h2 class="mb-3">Register User</h2>
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signup</title>
+
+  <!-- CSS File -->
+  <link rel="stylesheet" href="css/styles.css"> 
+</head>
+<body>
+  <div class="container">
+    <div class="registration form">
+        <header>Signup</header>
+        <form id="signupForm" class="w-25 m-4">
+            <div class="form-floating mb-3">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" id="nameInput" placeholder="Enter your name"> <!-- Name input with ID -->  
+            </div>
+            <div class="form-floating mb-3">
+                <label for="Email">Email address</label>
+                <input type="email" class="form-control" id="emailInput" placeholder="name@example.com"> <!-- Email input with ID -->
+            </div>
+            <div class="form-floating mb-3">
+              <label for="Password">Password</label>
+              <input type="password" class="form-control" id="passwordInput" placeholder="Password"> <!-- Password input with ID -->   
+            </div>
+            <div class="form-floating mb-3">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password"> <!-- Confirm password input -->
+            </div>
+            <button type="submit" class="button">Signup</button> <!-- Changed to submit type -->
+        </form>
+        <!-- Error message div for signup -->
+        <div id="signupError" class="error-message"></div><br>
+        <div class="signup">
+            <span class="signup">Already have an account? <a href="index.html">Login</a></span>
         </div>
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="passwordInput" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="nameInput" placeholder="Name">
-            <label for="floatingPassword">Name</label>
-        </div>
+    </div>
+  </div>
+  
+  
+  <!-- Firebase Configuration and JavaScript -->
+  <script type="module">
 
-        <button type="submit" class="btn btn-primary" style="float: right;">Create New User</button>
-        <a href="login.html"><button type="button" class="btn btn-primary me-2" style="float: right;">Sign In</button></a>
-    </form>
+    // Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+      authDomain: "test-99503.firebaseapp.com",
+      projectId: "test-99503",
+      storageBucket: "test-99503.appspot.com",
+      messagingSenderId: "1017306171186",
+      appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+    const auth = getAuth(app);
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "",
-          authDomain: "test-99503.firebaseapp.com",
-          projectId: "test-99503",
-          storageBucket: "test-99503.appspot.com",
-          messagingSenderId: "1017306171186",
-          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase();
-        const auth = getAuth(app);
+    let emailInput = document.getElementById('emailInput');
+    let passwordInput = document.getElementById('passwordInput');
+    let nameInput = document.getElementById('nameInput');
+    let signupForm = document.getElementById('signupForm');
 
-        let emailInput = document.getElementById('emailInput');
-        let passwordInput = document.getElementById('passwordInput');
-        let nameInput = document.getElementById('nameInput');
-        let MainForm = document.getElementById('MainForm');
+    let RegisterUser = evt => {
+        evt.preventDefault();
 
-        let RegisterUser = evt => {
-            evt.preventDefault();
-
-            createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-            .then((credentials)=>{
-                set(ref(db, 'UsersAuthList/' + credentials.user.uid),{
-                    name: nameInput.value,
-                })
-            })
-            .catch((error)=>{
-                alert(error.message);
-                console.log(error.code);
-                console.log(error.message);
-            })
+        if (passwordInput.value !== confirmPassword.value) {
+            alert("Passwords do not match");
+            return;
         }
 
-        MainForm.addEventListener('submit', RegisterUser);
-      </script>
+        createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+          .then((credentials)=>{
+              set(ref(db, 'UsersAuthList/' + credentials.user.uid),{
+                  name: nameInput.value,
+              })
+          })
+            .catch((error)=>{
+              alert(error.message);
+              console.log(error.code);
+              console.log(error.message);
+        })
+    }
 
-  </body>
+    signupForm.addEventListener('submit', RegisterUser);
+  </script>
+
+</body>
 </html>

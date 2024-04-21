@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- WORKING PDF DOWNLOADER -->
+    <!-- WORKING EXCEL DOWNLOADER -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <style>
+        #msg, #greet{
+          text-align: center;
+        }
+      </style>
+</head>
+
+<body>
+
+    <!-- sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+        <ul class="menu_items">
+            
+            <i id="sidebarOpen"></i>
+
+            <li class="item no-click">
+            <a class="nav_link">
+                <span class="navlink_icon">
+                <i class='bx bx-menu' ></i>
+                </span>
+                <h3>Menu</h3>
+            </a>
+            </li>
+
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-user-circle'></i>
+                </span>
+                <span class="navlink">Profile</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Edit profile</a>
+                <a href="#" class="nav_link sublink">Change password</a>
+            </ul>
+            </li>
+
+            <li class="item">
+                <a href="#" class="nav_link" id=" ">
+                    <span class="navlink_icon">
+                        <i class='bx bxs-dashboard'></i>
+                </span>
+                <span class="navlink">Dashboard</span>
+                </a>
+            </li>
+
+            <li class="item">
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-food-menu'></i>
+                </span>
+                <span class="navlink">Course</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Add course</a>
+                <a href="#" class="nav_link sublink">Edit course</a>
+            </ul>
+            </li>
+
+            <li class="item">
+                <a href="#" class="nav_link" id=" ">
+                    <span class="navlink_icon">
+                        <i class='bx bxs-report' ></i>
+                    </span>
+                    <span class="navlink">Report</span>
+                </a>
+            </li>
+
+
+            <li class="item">
+            <a href="#" class="nav_link" id="signOutButton">
+                <span class="navlink_icon">
+                <i class='bx bx-exit' ></i>
+                </span>
+                <span class="navlink">Log Out</span>
+            </a>
+            </li>
+            
+            <li class="item">
+            <a href="#" class="nav_link">
+                <span class="navlink_icon">
+                <i id="darkLight"></i>
+                </span>
+                <span class="navlink"> </span>
+            </a>
+            </li>
+
+        </ul>
+
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+            <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-expand-horizontal'></i>
+            </div>
+            <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-collapse-horizontal' ></i>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+    <h2 id="msg"></h2>
+    <h2 id="greet"></h2>
+
+    <div style="text-align: center;">
+    <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
+    <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
+    </div>  
+
+<script>
+    // function to retrieve the name of the logged-in user
+    // sign out function
+
+    let userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+    let userInfo = JSON.parse(sessionStorage.getItem("user-info"));
+
+    let MsgHead = document.getElementById('msg');
+    let GreetHead = document.getElementById('greet');
+    let signOutButton = document.getElementById('signOutButton');
+
+    MsgHead.innerText = `user with email "${userCreds.email}" logged in`;
+    GreetHead.innerText = `Hello ${userInfo.name}`;
+
+    let SignOut = () =>{
+        sessionStorage.removeItem("user-creds");
+        sessionStorage.removeItem("user-info");
+        window.location.href = 'index.html'
+    }
+
+    let CheckCred = () =>{
+        if (!sessionStorage.getItem("user-creds"))
+            window.location.href = 'index.html'
+
+        else{
+            MsgHead.innerText = `User with email "${userCreds.email}" logged in`;
+            GreetHead.innerText = `Hello ${userInfo.name}`;
+        }
+    }
+
+    window.addEventListener('load', CheckCred);
+    signOutButton.addEventListener('click', SignOut);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
+
+<script type="module">
+    // export to pdf function
+    // export to xlsx function
+    
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+    // firebase configuration
+    const firebaseConfig = {
+        // Firebase config details
+        apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+          authDomain: "test-99503.firebaseapp.com",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test-99503",
+          storageBucket: "test-99503.appspot.com",
+          messagingSenderId: "1017306171186",
+          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    // initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    // get references to Firebase database
+    const db = getDatabase();
+
+    let exportButton = document.getElementById('exportButton');
+    let exportXLSXButton = document.getElementById('exportXLSXButton');
+
+    // function to retrieve data from Firebase and export to PDF
+    async function exportDataToPDF() {
+        const dbRef = ref(db, 'StudentInfo');
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const pdf = new jsPDF();
+            pdf.text(JSON.stringify(data), 10, 10);
+            pdf.save('firebase_data.pdf');
+        } else {
+            alert('No data found');
+        }
+    }
+
+    // function to retrieve data from Firebase and export to XLSX
+    async function exportDataToXLSX() {
+        const dbRef = ref(db, 'StudentInfo');
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            let dataArray = [];
+            // Convert data to an array of objects if it's not already in that format
+            if (typeof data === 'object' && data !== null) {
+                Object.keys(data).forEach(key => {
+                    dataArray.push(data[key]);
+                });
+            }
+            console.log("Retrieved data:", dataArray); // Check the structure of the data array
+            const worksheet = XLSX.utils.json_to_sheet(dataArray);
+            console.log("Worksheet:", worksheet); // Check if worksheet is created
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            console.log("Workbook:", workbook); // Check if workbook is created
+            XLSX.writeFile(workbook, 'firebase_data.xlsx');
+        } else {
+            alert('No data found');
+        }
+    }
+
+    exportButton.addEventListener('click', exportDataToPDF);
+    exportXLSXButton.addEventListener('click', exportDataToXLSX);
+</script>
+<script src="js/sidebar.js"></script>
+</body>
+</html>

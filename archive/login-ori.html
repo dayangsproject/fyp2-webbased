@@ -1,88 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  </head>
-  <body>
-    
-    <form id="MainForm" class="w-25 m-4">
-        <h2 class="mb-3">Login User</h2>
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login</title>
+ 
+  <!-- CSS file -->
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+  <div class="container">
+    <div class="login form">
+        <header>Login</header>
+        <form id="MainForm">
+            <div class="form-group">
+                <label for="emailInput">Email address</label>
+                <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input type="password" class="form-control" id="passwordInput" placeholder="Enter your password">
+            </div>
+            <div class="form-group form-check">
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            <button type="submit" class="button">Log In</button>
+        </form>
+        <!-- Error message div for login -->
+        <div id="loginError" class="error-message"></div><br>
+        <div class="signup">
+            <span class="signup">Don't have an account? <a href="signup.html">Signup</a></span>
         </div>
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="passwordInput" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-        </div>
+    </div>
+</div>
 
-
-        <button type="submit" class="btn btn-primary" style="float: right;">Log In</button>
-        <a href="signup2.html"><button type="button" class="btn btn-primary me-2" style="float: right;">Sign Up</button></a>
-    </form>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-
+    <!-- Firebase Configuration and JavaScript -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "",
-          authDomain: "test-99503.firebaseapp.com",
-          projectId: "test-99503",
-          storageBucket: "test-99503.appspot.com",
-          messagingSenderId: "1017306171186",
-          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-          
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase();
-        const auth = getAuth(app);
-        const dbref = ref(db);
 
-        let emailInput = document.getElementById('emailInput');
-        let passwordInput = document.getElementById('passwordInput');
-        let MainForm = document.getElementById('MainForm');
+    // Firebase SDKs 
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+      authDomain: "test-99503.firebaseapp.com",
+      projectId: "test-99503",
+      storageBucket: "test-99503.appspot.com",
+      messagingSenderId: "1017306171186",
+      appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+    const auth = getAuth(app);
+    const dbref = ref(db);
 
-        let SignInUser = evt => {
-            evt.preventDefault();
+    let emailInput = document.getElementById('emailInput');
+    let passwordInput = document.getElementById('passwordInput');
+    let MainForm = document.getElementById('MainForm');
 
-            signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-            .then((credentials)=>{
-                get(child(dbref, 'UsersAuthList/' + credentials.user.uid)).then((snapshot)=>{
-                    if(snapshot.exists){
-                        sessionStorage.setItem("user-info", JSON.stringify({
-                            name: snapshot.val().name
-                    }))
-                    
-                    sessionStorage.setItem("user-creds", JSON.stringify(credentials.user))
-                    window.location.href = 'home.html';
-                    }
-                    /*else{
-                        alert("User not found");
-    
-                }*/
-                })
+    let SignInUser = evt => {
+        evt.preventDefault();
+
+        signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+        .then((credentials)=>{
+            get(child(dbref, 'UsersAuthList/' + credentials.user.uid)).then((snapshot)=>{
+                if(snapshot.exists){
+                    sessionStorage.setItem("user-info", JSON.stringify({
+                        name: snapshot.val().name
+                }))
+                
+                sessionStorage.setItem("user-creds", JSON.stringify(credentials.user))
+                window.location.href = 'home.html';
+                }
+                /*else{
+                    alert("User not found");
+            }*/
             })
-            .catch((error)=>{
-                alert(error.message);
-                console.log(error.code);
-                console.log(error.message);
-            })
-        }
+        })
+        .catch((error)=>{
+            alert(error.message);
+            console.log(error.code);
+            console.log(error.message);
+        })
+    }
 
-        MainForm.addEventListener('submit', SignInUser);
-      </script>
-
-  </body>
+    MainForm.addEventListener('submit', SignInUser);
+  </script>
+</body>
 </html>
