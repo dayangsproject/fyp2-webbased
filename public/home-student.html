@@ -42,7 +42,7 @@
             </div>
 
             <ul class="menu_items submenu">
-                <a href="#" class="nav_link sublink">Edit profile</a>
+                <a href="student-profile-edit.html" class="nav_link sublink">Edit profile</a>
                 <a href="#" class="nav_link sublink">Change password</a>
             </ul>
             </li>
@@ -111,7 +111,7 @@
     let GreetHead = document.getElementById('greet');
     let signOutButton = document.getElementById('signOutButton');
 
-    MsgHead.innerText = `user with email "${userCreds.email}" logged in`;
+    MsgHead.innerText = `User with email "${userCreds.email}" logged in`;
     GreetHead.innerText = `Hello ${userInfo.name}`;
 
     let SignOut = () =>{
@@ -125,13 +125,18 @@
             window.location.href = 'index.html'
 
         else{
-            MsgHead.innerText = `User with email "${userCreds.email}" logged in`;
-            GreetHead.innerText = `Hello ${userInfo.name}`;
+            displayUserInfoPopup(userCreds.email, userInfo.name);
         }
     }
 
     window.addEventListener('load', CheckCred);
     signOutButton.addEventListener('click', SignOut);
+
+    // Function to display popup with user info
+    function displayUserInfoPopup(email, name) {
+            alert(`User with email "${email}" logged in.\nWelcome ${name}.`);
+    }
+
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
