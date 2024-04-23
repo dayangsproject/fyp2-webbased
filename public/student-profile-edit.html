@@ -10,80 +10,83 @@
     <link rel="stylesheet" href="css/styles-2.css" />
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- sidebar -->
     <nav class="sidebar">
         <div class="menu_content"> 
-            <ul class="menu_items">
-                <i id="sidebarOpen"></i>
+        <ul class="menu_items">
+            
+            <i id="sidebarOpen"></i>
 
-                <li class="item no-click">
-                    <a class="nav_link">
-                        <span class="navlink_icon">
-                            <i class='bx bx-menu' ></i>
-                        </span>
-                        <h3>Menu</h3>
-                    </a>
-                </li>
+            <li class="item no-click">
+            <a class="nav_link">
+                <span class="navlink_icon">
+                <i class='bx bx-menu' ></i>
+                </span>
+                <h3>Menu</h3>
+            </a>
+            </li>
 
-                <div href="#" class="nav_link submenu_item">
-                    <span class="navlink_icon">
-                        <i class='bx bxs-user-circle'></i>
-                    </span>
-                    <span class="navlink">Profile</span>
-                    <i class="bx bx-chevron-right arrow-left"></i>
-                </div>
-
-                <ul class="menu_items submenu">
-                    <a href="student-profile.html" class="nav_link sublink">My profile</a>
-                    <a href="#" class="nav_link sublink">Change password</a>
-                </ul>
-                </li>
-
-                <li class="item">
-                    <div href="#" class="nav_link submenu_item">
-                        <span class="navlink_icon">
-                            <i class='bx bxs-food-menu'></i>
-                        </span>
-                        <span class="navlink">Course</span>
-                        <i class="bx bx-chevron-right arrow-left"></i>
-                    </div>
-
-                    <ul class="menu_items submenu">
-                        <a href="#" class="nav_link sublink">Add course</a>
-                        <a href="#" class="nav_link sublink">Edit course</a>
-                    </ul>
-                </li>
-
-                <li class="item">
-                    <a href="#" class="nav_link" id="signOutButton">
-                        <span class="navlink_icon">
-                            <i class='bx bx-exit' ></i>
-                        </span>
-                        <span class="navlink">Log Out</span>
-                    </a>
-                </li>
-                
-                <li class="item">
-                    <a href="#" class="nav_link">
-                        <span class="navlink_icon">
-                            <i id="darkLight"></i>
-                        </span>
-                        <span class="navlink"> </span>
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Sidebar Open / Close -->
-            <div class="bottom_content">
-                <div class="bottom expand_sidebar">
-                    <span> Expand</span>
-                    <i class='bx bx-expand-horizontal'></i>
-                </div>
-                <div class="bottom collapse_sidebar">
-                    <span> Collapse</span>
-                    <i class='bx bx-collapse-horizontal' ></i>
-                </div>
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-user-circle'></i>
+                </span>
+                <span class="navlink">Profile</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
             </div>
+
+            <ul class="menu_items submenu">
+                <a href="student-profile.html" class="nav_link sublink">My profile</a>
+                <a href="#" class="nav_link sublink">Change password</a>
+            </ul>
+            </li>
+
+            <li class="item">
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-food-menu'></i>
+                </span>
+                <span class="navlink">Course</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Add course</a>
+                <a href="#" class="nav_link sublink">Edit course</a>
+            </ul>
+            </li>
+
+
+            <li class="item">
+            <a href="#" class="nav_link" id="signOutButton">
+                <span class="navlink_icon">
+                <i class='bx bx-exit' ></i>
+                </span>
+                <span class="navlink">Log Out</span>
+            </a>
+            </li>
+            
+            <li class="item">
+            <a href="#" class="nav_link">
+                <span class="navlink_icon">
+                <i id="darkLight"></i>
+                </span>
+                <span class="navlink"> </span>
+            </a>
+            </li>
+
+        </ul>
+
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+            <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-expand-horizontal'></i>
+            </div>
+            <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-collapse-horizontal' ></i>
+            </div>
+        </div>
         </div>
     </nav>
 
@@ -178,7 +181,9 @@
             if (userInfo) {
                 document.getElementById('displayName').textContent = userInfo.name;
                 document.getElementById('displayEmail').textContent = userInfo.email;
-            }
+            }       
+
+            RetPage();
         });
 
         // using matric to save student data
@@ -230,7 +235,6 @@
                 update(ref(db, 'StudentInfo/' + matricNoInput.value), {
                     studentName: userName, // Use user's name as student name
                     email: userEmail, // Use user's email as student email
-                    matricNo: matricNoInput.value,
                     status: statusInput.value,
                     admission: admissionInput.value,
                     mode: modeInput.value
@@ -286,6 +290,67 @@
                 console.log(error);
             });
         }
+
+        // Function to retrieve data based on user's email
+function RetPage() {
+    // Retrieve user credentials from session storage
+    const userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+
+    // Check if user credentials are available
+    if (userCreds) {
+        const userEmail = userCreds.email;
+
+        // Reference to the StudentInfo node in the database
+        const studentInfoRef = ref(db, 'StudentInfo');
+
+        // Get all student nodes from the database
+        get(studentInfoRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                // Iterate over each child node
+                snapshot.forEach((childSnapshot) => {
+                    // Retrieve the student data
+                    const studentData = childSnapshot.val();
+                    // Check if the email matches
+                    if (studentData.email === userEmail) {
+                        // Email matches, retrieve matric number
+                        const matricNo = childSnapshot.key;
+                        // Set the input field values or do whatever you need to do with the data
+                        document.getElementById('displayName').textContent = studentData.studentName;
+                        document.getElementById('displayEmail').textContent = studentData.email;
+                        matricNoInput.value = matricNo;
+                        statusInput.value = studentData.status;
+                        admissionInput.value = studentData.admission;
+                        modeInput.value = studentData.mode;
+                        // Exit the loop since we found the matching email
+                        return;
+                    }
+                });
+            } else {
+                // No data found in the StudentInfo node
+                alert('No data found in the database');
+            }
+        }).catch((error) => {
+            // Error handling
+            alert('Error retrieving data: ' + error);
+            console.error(error);
+        });
+    } else {
+        // Handle the case where user credentials are not available
+        alert('User credentials not available');
+    }
+}
+
+
+        // Function to sign out user
+        function signOut() {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'index.html';
+        }
+
+        // Event listener to sign out user
+        const signOutButton = document.getElementById('signOutButton');
+        signOutButton.addEventListener('click', signOut);
 
         AddButton.addEventListener('click', AddData);
         RetButton.addEventListener('click', RetData);
