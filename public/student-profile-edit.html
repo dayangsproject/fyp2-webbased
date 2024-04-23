@@ -10,6 +10,82 @@
     <link rel="stylesheet" href="css/styles-2.css" />
 </head>
 <body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+            <ul class="menu_items">
+                <i id="sidebarOpen"></i>
+
+                <li class="item no-click">
+                    <a class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bx-menu' ></i>
+                        </span>
+                        <h3>Menu</h3>
+                    </a>
+                </li>
+
+                <div href="#" class="nav_link submenu_item">
+                    <span class="navlink_icon">
+                        <i class='bx bxs-user-circle'></i>
+                    </span>
+                    <span class="navlink">Profile</span>
+                    <i class="bx bx-chevron-right arrow-left"></i>
+                </div>
+
+                <ul class="menu_items submenu">
+                    <a href="student-profile.html" class="nav_link sublink">My profile</a>
+                    <a href="#" class="nav_link sublink">Change password</a>
+                </ul>
+                </li>
+
+                <li class="item">
+                    <div href="#" class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-food-menu'></i>
+                        </span>
+                        <span class="navlink">Course</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+
+                    <ul class="menu_items submenu">
+                        <a href="#" class="nav_link sublink">Add course</a>
+                        <a href="#" class="nav_link sublink">Edit course</a>
+                    </ul>
+                </li>
+
+                <li class="item">
+                    <a href="#" class="nav_link" id="signOutButton">
+                        <span class="navlink_icon">
+                            <i class='bx bx-exit' ></i>
+                        </span>
+                        <span class="navlink">Log Out</span>
+                    </a>
+                </li>
+                
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i id="darkLight"></i>
+                        </span>
+                        <span class="navlink"> </span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Sidebar Open / Close -->
+            <div class="bottom_content">
+                <div class="bottom expand_sidebar">
+                    <span> Expand</span>
+                    <i class='bx bx-expand-horizontal'></i>
+                </div>
+                <div class="bottom collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class='bx bx-collapse-horizontal' ></i>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Main content -->
     <div id="mainContent">
@@ -154,6 +230,7 @@
                 update(ref(db, 'StudentInfo/' + matricNoInput.value), {
                     studentName: userName, // Use user's name as student name
                     email: userEmail, // Use user's email as student email
+                    matricNo: matricNoInput.value,
                     status: statusInput.value,
                     admission: admissionInput.value,
                     mode: modeInput.value
