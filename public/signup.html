@@ -81,14 +81,18 @@
           .then((credentials)=>{
               set(ref(db, 'UsersAuthList/' + credentials.user.uid),{
                   name: nameInput.value,
-              })
+              });
+              // Redirect to login page
+              window.location.href = 'index.html';
+              // Show success message
+              alert('Account successfully created.');
           })
-            .catch((error)=>{
+          .catch((error)=>{
               alert(error.message);
               console.log(error.code);
               console.log(error.message);
-        })
-    }
+        });
+    };
 
     signupForm.addEventListener('submit', RegisterUser);
   </script>

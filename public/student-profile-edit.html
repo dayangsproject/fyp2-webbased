@@ -135,8 +135,6 @@
         <br><br>
 
         <button id="AddButton">Add</button>
-        <button id="RetButton">Retrieve</button>
-        <button id="UpdButton">Update</button>
     </div>
 
 
@@ -170,8 +168,6 @@
         let modeInput = document.getElementById('modeInput');
 
         let AddButton = document.getElementById('AddButton');
-        let RetButton = document.getElementById('RetButton');
-        let UpdButton = document.getElementById('UpdButton');
 
         let userCreds;
 
@@ -185,6 +181,18 @@
 
             RetPage();
         });
+
+        // Function to handle both adding and updating data
+        function handleData() {
+            const matricNo = matricNoInput.value;
+            if (!matricNo) {
+                // If matric number is not provided, call AddData
+                AddData();
+            } else {
+                // If matric number is provided, call UpdateData
+                UpdateData();
+            }
+        }
 
         // using matric to save student data
         // function to add student data
@@ -252,94 +260,54 @@
             }
         }
 
-        // function to retrieve data
-        function RetData() {
-            const dbref = ref(db);
-
-            get(child(dbref, 'StudentInfo/' + matricNoInput.value)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    // Retrieve the student data
-                    const studentData = snapshot.val();
-                    
-                    // Check if the email field exists in the student data
-                    if (studentData.email) {
-                        document.getElementById('displayEmail').textContent = studentData.email;
-                    } else {
-                        // Handle the case where the email field is missing
-                        document.getElementById('displayEmail').textContent = '';
-                        console.log('Email not found for the specified matric number.');
-                    }
-
-                    // Set other input field values
-                    document.getElementById('displayName').textContent = studentData.studentName;
-                    statusInput.value = studentData.status;
-                    admissionInput.value = studentData.admission;
-                    modeInput.value = studentData.mode;
-                } else {
-                    // Clear input fields if no data is found
-                    document.getElementById('displayName').textContent = '';
-                    document.getElementById('displayEmail').textContent = '';
-                    statusInput.value = '';
-                    admissionInput.value = '';
-                    modeInput.value = '';
-                    alert('No data found');
-                }
-            })
-            .catch((error) => {
-                alert('Error: ' + error);
-                console.log(error);
-            });
-        }
-
         // Function to retrieve data based on user's email
-function RetPage() {
-    // Retrieve user credentials from session storage
-    const userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+        function RetPage() {
+            // Retrieve user credentials from session storage
+            const userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
 
-    // Check if user credentials are available
-    if (userCreds) {
-        const userEmail = userCreds.email;
+            // Check if user credentials are available
+            if (userCreds) {
+                const userEmail = userCreds.email;
 
-        // Reference to the StudentInfo node in the database
-        const studentInfoRef = ref(db, 'StudentInfo');
+                // Reference to the StudentInfo node in the database
+                const studentInfoRef = ref(db, 'StudentInfo');
 
-        // Get all student nodes from the database
-        get(studentInfoRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                // Iterate over each child node
-                snapshot.forEach((childSnapshot) => {
-                    // Retrieve the student data
-                    const studentData = childSnapshot.val();
-                    // Check if the email matches
-                    if (studentData.email === userEmail) {
-                        // Email matches, retrieve matric number
-                        const matricNo = childSnapshot.key;
-                        // Set the input field values or do whatever you need to do with the data
-                        document.getElementById('displayName').textContent = studentData.studentName;
-                        document.getElementById('displayEmail').textContent = studentData.email;
-                        matricNoInput.value = matricNo;
-                        statusInput.value = studentData.status;
-                        admissionInput.value = studentData.admission;
-                        modeInput.value = studentData.mode;
-                        // Exit the loop since we found the matching email
-                        return;
+                // Get all student nodes from the database
+                get(studentInfoRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        // Iterate over each child node
+                        snapshot.forEach((childSnapshot) => {
+                            // Retrieve the student data
+                            const studentData = childSnapshot.val();
+                            // Check if the email matches
+                            if (studentData.email === userEmail) {
+                                // Email matches, retrieve matric number
+                                const matricNo = childSnapshot.key;
+                                // Set the input field values or do whatever you need to do with the data
+                                document.getElementById('displayName').textContent = studentData.studentName;
+                                document.getElementById('displayEmail').textContent = studentData.email;
+                                matricNoInput.value = matricNo;
+                                statusInput.value = studentData.status;
+                                admissionInput.value = studentData.admission;
+                                modeInput.value = studentData.mode;
+                                // Exit the loop since we found the matching email
+                                return;
+                            }
+                        });
+                    } else {
+                        // No data found in the StudentInfo node
+                        alert('No data found in the database');
                     }
+                }).catch((error) => {
+                    // Error handling
+                    alert('Error retrieving data: ' + error);
+                    console.error(error);
                 });
             } else {
-                // No data found in the StudentInfo node
-                alert('No data found in the database');
+                // Handle the case where user credentials are not available
+                alert('User credentials not available');
             }
-        }).catch((error) => {
-            // Error handling
-            alert('Error retrieving data: ' + error);
-            console.error(error);
-        });
-    } else {
-        // Handle the case where user credentials are not available
-        alert('User credentials not available');
-    }
-}
-
+        }
 
         // Function to sign out user
         function signOut() {
@@ -352,9 +320,8 @@ function RetPage() {
         const signOutButton = document.getElementById('signOutButton');
         signOutButton.addEventListener('click', signOut);
 
-        AddButton.addEventListener('click', AddData);
-        RetButton.addEventListener('click', RetData);
-        UpdButton.addEventListener('click', UpdateData);
+        // Event listener for the button to handle data
+        AddButton.addEventListener('click', handleData);
 
       </script>
 </body>
