@@ -108,7 +108,6 @@
           </table>
         </div>
 
-
     <br><br>
 
     <button id="AddButton">Add</button>
@@ -184,7 +183,7 @@
 
             // Iterate through each intake type and check which semesters are selected
             courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
-                selectedSemesters.push(input.value);
+            selectedSemesters.push(input.value);
             });
 
             const dbref = ref(db);
@@ -198,7 +197,7 @@
                     courseStatus.value = snapshot.val().courseStatus;
                     
                     // Set selected semesters
-                    courseSemester.querySelectorAll('input[type="radio"]').forEach((input) => {
+                    courseSemester.querySelectorAll('input[type="checkbox"]').forEach((input) => {
                         if (snapshot.val().courseSemester.includes(input.value)) {
                             input.checked = true;
                         } else {
