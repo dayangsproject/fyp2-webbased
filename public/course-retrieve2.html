@@ -35,6 +35,12 @@
         #courseList {
             margin-top: 20px;
         }
+
+        .semesterDivider {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-top: 1px solid #000;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +96,11 @@
                         semesterHeader.textContent = semester;
                         courseList.appendChild(semesterHeader);
 
+                        // Add line separator
+                        const divider = document.createElement('div');
+                        divider.classList.add('semesterDivider');
+                        courseList.appendChild(divider);
+
                         snapshot.forEach((childSnapshot) => {
                             const course = childSnapshot.val();
 
@@ -117,6 +128,9 @@
                                 courseList.appendChild(courseDiv);
                             }
                         });
+
+                        // Add line separator
+                        courseList.appendChild(divider.cloneNode(true));
                     } 
                 } else {
                     const courseList = document.getElementById('courseList');
