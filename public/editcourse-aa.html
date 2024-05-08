@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course CRUD function</title>
+    <style>
+        label{
+            display: inline-block;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 110px;
+        }
+
+        input, select{
+            width: 250px;
+            height: 30px;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            height: 30px;
+            width: 72px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <label>Code</label>
+    <input type="text" id="courseCodeInput">     <button id="RetButton">Retrieve</button>
+    <br><br>
+
+    <label>Course Name</label>
+    <input type="text" id="courseNameInput">
+    <br><br>
+
+    <label>Course Credit Hours</label>
+    <input type="number" id="creditHourInput">
+    <br><br>
+
+    <label>Status</label>
+    <select id="courseStatus">
+        <option value="Active">Active</option>
+        <option value="Inactive">Not active</option>
+    </select>
+    <br><br>
+
+    <label for="courseSemester">Course Semester</label>
+    <div id="courseSemester">
+        <table>
+            <tr>
+              <th></th> <!-- Empty header for spacing -->
+              <th>Sem 1</th>
+              <th>Sem 2</th>
+              <th>Sem 3</th>
+              <th>Sem 4</th>
+              <th>Sem 5</th>
+              <th>Sem 6</th>
+            </tr>
+            <tr>
+                <td>Feb Intake Full</td>
+                <td><input type="checkbox" name="semester" value="febFull-sem1"></td>
+                <td><input type="checkbox" name="semester" value="febFull-sem2"></td>
+                <td><input type="checkbox" name="semester" value="febFull-sem3"></td>
+            </tr>
+            <tr>
+                <td>June Intake Full</td>
+                <td><input type="checkbox" name="semester" value="juneFull-sem1"></td>
+                <td><input type="checkbox" name="semester" value="juneFull-sem2"></td>
+                <td><input type="checkbox" name="semester" value="juneFull-sem3"></td>
+            </tr>
+            <tr>
+                <td>Oct Intake Full</td>
+                <td><input type="checkbox" name="semester" value="octFull-sem1"></td>
+                <td><input type="checkbox" name="semester" value="octFull-sem2"></td>
+                <td><input type="checkbox" name="semester" value="octFull-sem3"></td>
+            </tr>
+            <tr>
+                <td>Feb Intake Part</td>
+                <td><input type="checkbox" name="semester" value="febPart-sem1"></td>
+                <td><input type="checkbox" name="semester" value="febPart-sem2"></td>
+                <td><input type="checkbox" name="semester" value="febPart-sem3"></td>
+                <td><input type="checkbox" name="semester" value="febPart-sem4"></td>
+                <td><input type="checkbox" name="semester" value="febPart-sem5"></td>
+                <td><input type="checkbox" name="semester" value="febPart-sem6"></td>
+            </tr>
+            <tr>
+                <td>June Intake Part</td>
+                <td><input type="checkbox" name="semester" value="junePart-sem1"></td>
+                <td><input type="checkbox" name="semester" value="junePart-sem2"></td>
+                <td><input type="checkbox" name="semester" value="junePart-sem3"></td>
+                <td><input type="checkbox" name="semester" value="junePart-sem4"></td>
+                <td><input type="checkbox" name="semester" value="junePart-sem5"></td>
+                <td><input type="checkbox" name="semester" value="junePart-sem6"></td>
+            </tr>
+            <tr>
+                <td>Oct Intake Part</td>
+                <td><input type="checkbox" name="semester" value="octPart-sem1"></td>
+                <td><input type="checkbox" name="semester" value="octPart-sem2"></td>
+                <td><input type="checkbox" name="semester" value="octPart-sem3"></td>
+                <td><input type="checkbox" name="semester" value="octPart-sem4"></td>
+                <td><input type="checkbox" name="semester" value="octPart-sem5"></td>
+                <td><input type="checkbox" name="semester" value="octPart-sem6"></td>
+            </tr>
+
+          </table>
+        </div>
+
+    <br><br>
+
+    <button onclick="window.location.href='home-aa.html'">Home</button>
+    <button id="UpdButton">Update</button>
+    <button id="DelButton">Delete</button>
+
+
+    <script type="module">
+        // Import firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import{getDatabase, ref, child, get, set, update, remove} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+          authDomain: "test-99503.firebaseapp.com",
+          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "test-99503",
+          storageBucket: "test-99503.appspot.com",
+          messagingSenderId: "1017306171186",
+          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get references to Firebase database
+        const db = getDatabase();
+
+        let courseCodeInput = document.getElementById('courseCodeInput');
+        let courseNameInput = document.getElementById('courseNameInput');
+        let creditHourInput = document.getElementById('creditHourInput');
+        let courseStatus = document.getElementById('courseStatus');
+        let courseSemester = document.getElementById('courseSemester');
+
+        let RetButton = document.getElementById('RetButton');
+        let UpdButton = document.getElementById('UpdButton');
+        let DelButton = document.getElementById('DelButton');
+
+        // function to retrieve data
+        function RetData(){
+            // Construct an array to store selected semesters
+            let selectedSemesters = [];
+
+            // Iterate through each intake type and check which semesters are selected
+            courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            selectedSemesters.push(input.value);
+            });
+
+            const dbref = ref(db);
+
+            get(child(dbref, 'CourseInfo/' + courseCodeInput.value)).then((snapshot) => {
+                if(snapshot.exists()){
+
+                    courseCodeInput.value = snapshot.val().courseCode;
+                    courseNameInput.value = snapshot.val().courseName;
+                    creditHourInput.value = snapshot.val().creditHour;
+                    courseStatus.value = snapshot.val().courseStatus;
+                    
+                    // Set selected semesters
+                    courseSemester.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+                        if (snapshot.val().courseSemester.includes(input.value)) {
+                            input.checked = true;
+                        } else {
+                            input.checked = false;
+                        }
+                    });
+                }
+                else{
+                    alert('No data found');
+                }
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            });
+        }
+
+        // function to update course data
+        function UpdateData(){ 
+            // Construct an array to store selected semesters
+            let selectedSemesters = [];
+            courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(option => {
+                selectedSemesters.push(option.value);
+            });
+
+            update (ref(db, 'CourseInfo/' + courseCodeInput.value), {
+                courseName: courseNameInput.value,
+                creditHour: Number(creditHourInput.value),
+                courseStatus: courseStatus.value,
+                courseSemester: selectedSemesters // Update with selected semesters array
+            })
+            .then(()=>{
+                alert('Data updated successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        // function to delete course data
+        function DeleteData(){ 
+            remove (ref(db, 'CourseInfo/' + courseCodeInput.value))
+            .then(()=>{
+                alert('Data deleted successfully');
+            })
+            .catch((error)=>{
+                alert('Error: ' + error);
+                console.log(error);
+            })
+        }
+
+        RetButton.addEventListener('click', RetData);
+        UpdButton.addEventListener('click', UpdateData);
+        DelButton.addEventListener('click', DeleteData);
+
+      </script>
+
+</body>
+</html>

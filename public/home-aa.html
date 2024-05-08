@@ -11,10 +11,11 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
     <style>
-        #msg, #greet{
-          text-align: center;
+        #mainContent {
+            padding-left: 300px; /* Adjust the value according to your sidebar width */
+            padding-top: 50px;
         }
-      </style>
+    </style>    
 </head>
 
 <body>
@@ -68,14 +69,14 @@
             </div>
 
             <ul class="menu_items submenu">
-                <a href="#" class="nav_link sublink">View course list</a>
-                <a href="#" class="nav_link sublink">Add course</a>
-                <a href="#" class="nav_link sublink">Edit course</a>
+                <a href="viewcourse-aa.html" class="nav_link sublink">View course list</a>
+                <a href="addcourse-aa.html" class="nav_link sublink">Add course</a>
+                <a href="editcourse-aa.html" class="nav_link sublink">Edit course</a>
             </ul>
             </li>
 
             <li class="item">
-                <a href="#" class="nav_link" id=" ">
+                <a href="report-aa.html" class="nav_link" id=" ">
                     <span class="navlink_icon">
                         <i class='bx bxs-report' ></i>
                     </span>
@@ -118,13 +119,10 @@
         </div>
     </nav>
 
-    <h2 id="msg"></h2>
-    <h2 id="greet"></h2>
-
-    <div style="text-align: center;">
-    <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
-    <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
-    </div>  
+    <div id="mainContent">
+        <h2 id="msg"></h2>
+        <h2 id="greet"></h2>
+    </div>
 
 <script>
     // function to retrieve the name of the logged-in user
@@ -164,12 +162,6 @@
     }
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
-
-
 <script type="module">
     // export to pdf function
     // export to xlsx function
@@ -196,50 +188,6 @@
     // get references to Firebase database
     const db = getDatabase();
 
-    let exportButton = document.getElementById('exportButton');
-    let exportXLSXButton = document.getElementById('exportXLSXButton');
-
-    // function to retrieve data from Firebase and export to PDF
-    async function exportDataToPDF() {
-        const dbRef = ref(db, 'StudentInfo');
-        const snapshot = await get(dbRef);
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            const pdf = new jsPDF();
-            pdf.text(JSON.stringify(data), 10, 10);
-            pdf.save('firebase_data.pdf');
-        } else {
-            alert('No data found');
-        }
-    }
-
-    // function to retrieve data from Firebase and export to XLSX
-    async function exportDataToXLSX() {
-        const dbRef = ref(db, 'StudentInfo');
-        const snapshot = await get(dbRef);
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            let dataArray = [];
-            // Convert data to an array of objects if it's not already in that format
-            if (typeof data === 'object' && data !== null) {
-                Object.keys(data).forEach(key => {
-                    dataArray.push(data[key]);
-                });
-            }
-            console.log("Retrieved data:", dataArray); // Check the structure of the data array
-            const worksheet = XLSX.utils.json_to_sheet(dataArray);
-            console.log("Worksheet:", worksheet); // Check if worksheet is created
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-            console.log("Workbook:", workbook); // Check if workbook is created
-            XLSX.writeFile(workbook, 'firebase_data.xlsx');
-        } else {
-            alert('No data found');
-        }
-    }
-
-    exportButton.addEventListener('click', exportDataToPDF);
-    exportXLSXButton.addEventListener('click', exportDataToXLSX);
 </script>
 <script src="js/sidebar.js"></script>
 </body>
