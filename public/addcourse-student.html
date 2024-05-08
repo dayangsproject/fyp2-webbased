@@ -12,8 +12,9 @@
 <body>
     <!-- Main content -->
     <div id="mainContent">
+
         <label>Name: </label>
-        <span id="displayName"></span>
+        <span id="displayName"></span> <button id="homeButton">Home</button>
         <br><br>
 
         <label>Email: </label>
@@ -28,10 +29,12 @@
         <span id="modeInput"></span>
         <br><br>
 
-        <button id="homeButton">Home</button>
+        <div id="courseList">
+            <h4>Courses for Current Mode:</h4>
+            <ul id="courseListItems"></ul>
+        </div>
     </div>
 
-    <script type="module" src="js/sidebar.js"></script>
     <script type="module">
         // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -57,6 +60,7 @@
 
         let matricNoInput = document.getElementById('matricNoInput');
         let modeInput = document.getElementById('modeInput');
+        let courseListItems = document.getElementById('courseListItems');
 
         // Automatically retrieve user's name and email when the page loads
         window.addEventListener('load', () => {
@@ -95,6 +99,9 @@
                                 // Set the input field values or do whatever you need to do with the data
                                 document.getElementById('matricNoInput').textContent = matricNo;
                                 document.getElementById('modeInput').textContent = studentData.mode;
+                                
+                                // Retrieve courses for current mode
+                                retrieveCoursesByMode(studentData.mode);
                                 // Exit the loop since we found the matching email
                                 return;
                             }
@@ -112,6 +119,47 @@
                 // Handle the case where user credentials are not available
                 alert('User credentials not available');
             }
+        }
+
+       // Function to retrieve courses based on mode of study
+        function retrieveCoursesByMode(mode) {
+            // Reference to the CourseInfo node in the database
+            const courseInfoRef = ref(db, 'CourseInfo');
+
+            // Get data from CourseInfo node
+            get(courseInfoRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Clear previous course list
+                    courseListItems.innerHTML = '';
+
+                    // Iterate over each child node
+                    snapshot.forEach((childSnapshot) => {
+                        // Retrieve course data
+                        const courseData = childSnapshot.val();
+                        
+                        // Iterate over each semester in courseData.courseSemester
+                        courseData.courseSemester.forEach((semester) => {
+                            // Extract mode from semester string
+                            const courseMode = semester.split('-')[0];
+
+                            // Check if the mode matches the student's mode
+                            if (courseMode === mode) {
+                                // Add course to the course list
+                                const courseListItem = document.createElement('li');
+                                courseListItem.textContent = courseData.courseName;
+                                courseListItems.appendChild(courseListItem);
+                            }
+                        });
+                    });
+                } else {
+                    // No data found in the CourseInfo node
+                    alert('No course data found in the database');
+                }
+            }).catch((error) => {
+                // Error handling
+                alert('Error retrieving course data: ' + error);
+                console.error(error);
+            });
         }
 
         // Function to navigate to home page
