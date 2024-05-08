@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Course</title>
+    <style>
+        label{
+            display: inline-block;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 110px;
+        }
+
+        input, select{
+            width: 250px;
+            height: 30px;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            height: 30px;
+            width: 72px;
+        }
+
+        #modeOptions {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <label>Matric Number</label>
+    <input type="number" id="matricNoInput">
+    <br><br>
+
+    <div id="modeOptions">
+        <label>Intake/Mode</label>
+        <select id="modeInput">
+            <option value=" "> </option>
+            <option value="febFull">February Full Time</option>
+            <option value="juneFull">June Full Time</option>
+            <option value="octFull">October Full Time</option>
+            <option value="febPart">February Part Time</option>
+            <option value="junePart">June Part Time</option>
+            <option value="octPart">October Part Time</option>
+        </select>
+        <br><br>
+    </div>
+
+    <label>Available Courses:</label>
+    <select id="courseList">
+        <!-- Course options will be dynamically added here -->
+    </select>
+    <br><br>
+
+    <button id="AddButton">Add Course</button>
+
+    <script type="module">
+        // Import firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, get, set, child, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+         // firebase configuration
+         const firebaseConfig = {
+            // Firebase config details
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get reference to Firebase database
+        const db = getDatabase();
+
+        // Function to retrieve matric number from user's email
+        function getMatricNumberFromEmail(email) {
+            const usersRef = ref(db, 'UsersAuthList');
+            const query = orderByChild(usersRef, 'email');
+            return get(query.equalTo(email)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    // Assuming there's only one user with the given email
+                    const matricNo = Object.keys(userData)[0];
+                    return matricNo;
+                } else {
+                    throw new Error("User data not found.");
+                }
+            }).catch((error) => {
+                console.error("Error fetching user data:", error);
+                throw error;
+            });
+        }
+
+
+        // Function to retrieve mode based on matric number
+        function getModeFromMatricNumber(matricNo) {
+            const studentRef = ref(db, 'StudentInfo');
+            const queryRef = child(studentRef, 'mode');
+            return get(queryRef.orderByChild('matricNo').equalTo(matricNo)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const student = snapshot.val();
+                    const mode = Object.values(student)[0].mode;
+                    return mode;
+                } else {
+                    throw new Error("Student not found.");
+                }
+            }).catch((error) => {
+                console.error("Error retrieving mode:", error);
+                throw error;
+            });
+        }
+
+        // Event listener for matric number input
+        document.getElementById('matricNoInput').addEventListener('input', (event) => {
+            const matricNo = event.target.value;
+            getModeFromMatricNumber(matricNo).then((mode) => {
+                // Use the mode as needed
+                console.log("Mode:", mode);
+            }).catch((error) => {
+                console.error(error.message);
+                alert("Error retrieving mode. Please try again later.");
+            });
+        });
+
+        // Function to fetch courses based on mode
+        function fetchCoursesByMode(mode) {
+            console.log("Fetching courses for mode:", mode);
+            // Reference to the CourseInfo node in the database
+            const coursesRef = ref(db, 'CourseInfo');
+            // Read data from the CourseInfo node
+            return get(coursesRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const courses = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const course = childSnapshot.val();
+                        // Check if the course includes the selected mode
+                        if (course.courseSemester.includes(mode)) {
+                            courses.push(course);
+                        }
+                    });
+                    console.log("Fetched courses:", courses);
+                    return courses;
+                } else {
+                    throw new Error("No courses found.");
+                }
+            }).catch((error) => {
+                console.error("Error fetching courses:", error);
+                throw error;
+            });
+        }
+
+        // Function to retrieve student's mode based on matric number
+        function getStudentMode(matricNo) {
+            console.log("Retrieving mode for matric number:", matricNo);
+            // Reference to the StudentInfo node in the database
+            const studentRef = ref(db, 'StudentInfo');
+            // Query to get the student's mode based on matric number
+            const queryRef = child(studentRef, 'mode');
+            return get(queryRef.orderByChild('matricNo').equalTo(matricNo)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const student = snapshot.val();
+                    // Assuming there's only one student with the given matric number
+                    const mode = Object.values(student)[0].mode;
+                    console.log("Retrieved mode:", mode);
+                    return mode;
+                } else {
+                    throw new Error("Student not found.");
+                }
+            }).catch((error) => {
+                console.error("Error retrieving mode:", error);
+                throw error;
+            });
+        }
+
+        // Function to dynamically populate semester options
+        function populatemodeOptions(courses) {
+            console.log("Populating semester options with courses:", courses);
+            const semesterSelect = document.getElementById('semester');
+            semesterSelect.innerHTML = ''; // Clear previous options
+
+            // Extract semesters from fetched courses
+            const semesters = [...new Set(courses.flatMap(course => course.courseSemester))];
+
+            // Populate semester options
+            semesters.forEach((semester) => {
+                const option = document.createElement('option');
+                option.value = semester;
+                option.textContent = semester;
+                semesterSelect.appendChild(option);
+            });
+
+            // Show semester options
+            document.getElementById('modeOptions').style.display = 'block';
+        }
+
+        // Function to dynamically populate course options
+        function populateCourseOptions(courses) {
+            console.log("Populating course options with courses:", courses);
+            const courseSelect = document.getElementById('courseList');
+            courseSelect.innerHTML = ''; // Clear previous options
+
+            // Populate course options
+            courses.forEach((course) => {
+                const option = document.createElement('option');
+                option.value = course.courseCode;
+                option.textContent = course.courseCode + " - " + course.courseName;
+                courseSelect.appendChild(option);
+            });
+        }
+
+        // Event listener for matric number input
+        document.getElementById('matricNoInput').addEventListener('input', (event) => {
+            const matricNo = event.target.value;
+            getStudentMode(matricNo).then((mode) => {
+                fetchCoursesByMode(mode).then((courses) => {
+                    populatemodeOptions(courses);
+                    populateCourseOptions(courses);
+                }).catch((error) => {
+                    console.error(error.message);
+                    alert("Error fetching courses. Please try again later.");
+                });
+            }).catch((error) => {
+                console.error(error.message);
+                alert("Error retrieving mode. Please try again later.");
+            });
+        });
+
+        // Function to add selected course to student's course list
+        function addCourse() {
+            // Get selected course and semester
+            const courseCode = document.getElementById('courseList').value;
+            const semester = document.getElementById('semester').value;
+            // Get student's matric number
+            const matricNo = document.getElementById('matricNoInput').value;
+            // Reference to student's course list in the database
+            const studentCourseRef = ref(db, `StudentInfo/${matricNo}/courseList`);
+            // Add selected course to student's course list
+            set(studentCourseRef.push(), {
+                courseCode: courseCode,
+                semester: semester
+            }).then(() => {
+                alert("Course added successfully.");
+            }).catch((error) => {
+                console.error("Error adding course:", error);
+                alert("Error adding course. Please try again later.");
+            });
+        }
+
+        // Event listener for adding course
+        document.getElementById('AddButton').addEventListener('click', addCourse);
+    </script>
+</body>
+</html>
