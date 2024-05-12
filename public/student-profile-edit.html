@@ -138,7 +138,8 @@
         </select>
         <br><br>
 
-        <button id="AddButton">Add</button>
+        <button id="AddButton">Add</button> 
+        <button id="homeButton">Home</button>
     </div>
 
 
@@ -326,6 +327,16 @@
 
         // Event listener for the button to handle data
         AddButton.addEventListener('click', handleData);
+
+        // Function to navigate to home page
+        function goToHome() {
+            window.location.href = 'home-student.html';
+        }
+
+        // Event listener for the Home button
+        const homeButton = document.getElementById('homeButton');
+        homeButton.addEventListener('click', goToHome);
+
 
       </script>
 </body>

@@ -29,6 +29,11 @@
         <span id="modeInput"></span>
         <br><br>
 
+        <label for="semesterSelect">Select Semester:</label>
+            <select id="semesterSelect">
+            </select>
+        <br><br>
+
         <div id="courseList">
             <h4>Courses for Current Mode:</h4>
             <ul id="courseListItems"></ul>
@@ -38,7 +43,7 @@
     <script type="module">
         // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import{getDatabase, ref, get} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
         
         // Firebase configuration
         const firebaseConfig = {
@@ -99,7 +104,13 @@
                                 // Set the input field values or do whatever you need to do with the data
                                 document.getElementById('matricNoInput').textContent = matricNo;
                                 document.getElementById('modeInput').textContent = studentData.mode;
-                                
+
+                                // Extract the mode type from the mode string (e.g., "Full" or "Part")
+                                const modeType = studentData.mode.includes('Full') ? 'Full Time' : 'Part Time';
+
+                                // Set up the semester select options based on the mode type
+                                setupSemesterSelect(modeType);
+
                                 // Retrieve courses for current mode
                                 retrieveCoursesByMode(studentData.mode);
                                 // Exit the loop since we found the matching email
@@ -120,6 +131,57 @@
                 alert('User credentials not available');
             }
         }
+
+        // Function to set up semester select options based on mode
+        function setupSemesterSelect(mode) {
+            const semesterSelect = document.getElementById('semesterSelect');
+            
+            // Clear previous options
+            semesterSelect.innerHTML = '';
+
+            // Add an option for "All Semesters"
+            const allOption = document.createElement('option');
+            allOption.value = 'all';
+            allOption.textContent = 'All Semesters';
+            semesterSelect.appendChild(allOption);
+
+            // Add options for individual semesters based on mode
+            if (mode === 'Full Time') {
+                // For Full Time mode, add options for semesters 1, 2, and 3
+                for (let i = 1; i <= 3; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = 'Semester ' + i;
+                    semesterSelect.appendChild(option);
+                }
+            } else if (mode === 'Part Time') {
+                // For Part Time mode, add options for all semesters
+                for (let i = 1; i <= 6; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = 'Semester ' + i;
+                    semesterSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Add an event listener to the semester select dropdown outside the setupSemesterSelect function
+        const semesterSelect = document.getElementById('semesterSelect');
+        semesterSelect.addEventListener('change', () => {
+            // Retrieve the selected semester value
+            const selectedSemester = semesterSelect.value;
+            // Retrieve the user's mode
+            const userMode = document.getElementById('modeInput').textContent;
+            
+            // Check if the selected option is "All Semesters"
+            if (selectedSemester === 'all') {
+                // Retrieve all courses for the user's mode
+                retrieveCoursesByMode(userMode);
+            } else {
+                // Retrieve courses based on mode and selected semester
+                retrieveCoursesBySemester(userMode, parseInt(selectedSemester));
+            }
+        });
 
        // Function to retrieve courses based on mode of study
         function retrieveCoursesByMode(mode) {
@@ -145,9 +207,22 @@
                             // Check if the mode matches the student's mode
                             if (courseMode === mode) {
                                 // Add course to the course list
-                                const courseListItem = document.createElement('li');
-                                courseListItem.textContent = courseData.courseName;
-                                courseListItems.appendChild(courseListItem);
+                                const listItem = document.createElement('li');
+                                const courseName = document.createElement('span');
+                                courseName.textContent = courseData.courseName;
+                                listItem.appendChild(courseName);
+                                
+                                // Add an "add" button beside the course name
+                                const addButton = document.createElement('button');
+                                addButton.textContent = 'Add';
+                                addButton.addEventListener('click', () => {
+                                    // Call a function to handle adding the course
+                                    addCourseToDatabase(courseData.courseCode);
+                                });
+                                listItem.appendChild(addButton);
+
+                                // Append the list item to the course list
+                                courseListItems.appendChild(listItem);
                             }
                         });
                     });
@@ -161,6 +236,120 @@
                 console.error(error);
             });
         }
+
+        // Function to retrieve courses based on mode and selected semester
+        function retrieveCoursesBySemester(mode, semester) {
+            // Reference to the CourseInfo node in the database
+            const courseInfoRef = ref(db, 'CourseInfo');
+
+            // Get data from CourseInfo node
+            get(courseInfoRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // Clear previous course list
+                    courseListItems.innerHTML = '';
+
+                    // Iterate over each child node
+                    snapshot.forEach((childSnapshot) => {
+                        // Retrieve course data
+                        const courseData = childSnapshot.val();
+                        
+                        // Check if the course matches the selected semester and mode
+                        courseData.courseSemester.forEach((courseSemester) => {
+                            const [courseMode, courseSem] = courseSemester.split('-');
+                            if (courseMode === mode && parseInt(courseSem.charAt(courseSem.length - 1)) === semester) {
+                                // Add course to the course list
+                                const listItem = document.createElement('li');
+                                const courseName = document.createElement('span');
+                                courseName.textContent = courseData.courseName;
+                                listItem.appendChild(courseName);
+                                
+                                // Add an "add" button beside the course name
+                                const addButton = document.createElement('button');
+                                addButton.textContent = 'Add';
+                                addButton.addEventListener('click', () => {
+                                    // Call a function to handle adding the course
+                                    addCourseToDatabase(courseData.courseCode);
+                                });
+                                listItem.appendChild(addButton);
+
+                                // Append the list item to the course list
+                                courseListItems.appendChild(listItem);
+                            }
+                        });
+                    });
+                } else {
+                    // No data found in the CourseInfo node
+                    alert('No course data found in the database');
+                }
+            }).catch((error) => {
+                // Error handling
+                alert('Error retrieving course data: ' + error);
+                console.error(error);
+            });
+        }
+
+        // Add event listener to the course list items
+        courseListItems.addEventListener('click', (event) => {
+            const target = event.target;
+            // Check if the clicked element is a button with the class 'add-course'
+            if (target.classList.contains('add-course')) {
+                // Retrieve the course name associated with the clicked button
+                const courseName = target.dataset.courseName;
+                // Call a function to handle adding the course to the database
+                addCourseToDatabase(courseName);
+            }
+        });
+
+        // Function to add a course to the database
+        function addCourseToDatabase(courseName) {
+            // Retrieve the current user's matric number
+            const matricNo = document.getElementById('matricNoInput').textContent;
+
+            // Reference to the StudentInfo node in the database
+            const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+            // Retrieve the current value of 'courseTaken' from the database
+            get(studentRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const studentData = snapshot.val();
+                    // Check if 'courseTaken' exists
+                    if (!studentData.hasOwnProperty('courseStatus')) {
+                        // If 'courseTaken' doesn't exist, initialize it as an empty object
+                        studentData.courseStatus = {};
+                    }
+                    // Add the course to 'courseTaken' if it's not already added
+                    if (!studentData.courseStatus.hasOwnProperty('courseTaken')) {
+                        studentData.courseStatus.courseTaken = [];
+                    }
+                    // Check if the course is already in the list
+                    if (!studentData.courseStatus.courseTaken.includes(courseName)) {
+                        // Add the course to the list
+                        studentData.courseStatus.courseTaken.push(courseName);
+                        // Update the database with the new 'courseTaken' value
+                        set(studentRef, studentData)
+                            .then(() => {
+                                // Provide visual feedback to the user (optional)
+                                alert('Course added successfully!');
+                            })
+                            .catch((error) => {
+                                alert('Error adding course: ' + error);
+                                console.error(error);
+                            });
+                    } else {
+                        // If the course is already in the list, notify the user
+                        alert('Course is already added!');
+                    }
+                } else {
+                    // If the student data doesn't exist, display an error message
+                    alert('Student data not found!');
+                }
+            }).catch((error) => {
+                // Handle errors
+                alert('Error retrieving student data: ' + error);
+                console.error(error);
+            });
+        }
+
 
         // Function to navigate to home page
         function goToHome() {
