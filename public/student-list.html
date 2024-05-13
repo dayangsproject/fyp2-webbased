@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="container mt-3">
+        <input type="text" id="searchInput" class="form-control mb-2" placeholder="Search...">
         <table class="table table-dark">
             <thead>
                 <th>No</th>
@@ -27,9 +28,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Edit Student Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Input fields for editing student details will go here -->
@@ -65,8 +63,8 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button id="saveChangesBtn" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -245,6 +243,32 @@
                 console.error("Error updating student details: ", error);
             });
         }
+
+        // Function to handle search
+        function handleSearch() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#tbody1 tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let found = false;
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(searchQuery)) {
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Attach event listener to search input
+        document.getElementById('searchInput').addEventListener('input', handleSearch);
 
         // Call the function to fill the table when the window loads
         window.onload = getAllDataOnce;
