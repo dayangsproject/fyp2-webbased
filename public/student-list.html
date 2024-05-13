@@ -21,12 +21,64 @@
         </table>
     </div>
 
-    <script type = "module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Student Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Input fields for editing student details will go here -->
+                    <label for="matricNo">Matric No:</label>
+                    <input type="text" id="matricNo" class="form-control mb-2">
 
-        // Your web app's Firebase configuration
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" class="form-control mb-2">
+
+                    <label for="intake">Intake:</label>
+                    <input type="text" id="intake" class="form-control mb-2">
+
+                    <label>Intake/Mode</label>
+                    <select id="mode" class="form-control">
+                        <option value=""> </option>
+                        <option value="febFull">February Full Time</option>
+                        <option value="juneFull">June Full Time</option>
+                        <option value="octFull">October Full Time</option>
+                        <option value="febPart">February Part Time</option>
+                        <option value="junePart">June Part Time</option>
+                        <option value="octPart">October Part Time</option>
+                    </select>
+
+                    <label>Status</label>
+                    <select id="status" class="form-control">
+                        <option value=""> </option>
+                        <option value="Active">Active</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="On hiatus">On hiatus</option>
+                        <option value="Withdrawn">Withdrawn</option>
+                        <option value="Failed and quit">Failed and quit</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="saveChangesBtn" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, get, set, child, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
             authDomain: "test-99503.firebaseapp.com",
@@ -34,76 +86,169 @@
             projectId: "test-99503",
             storageBucket: "test-99503.appspot.com",
             messagingSenderId: "1017306171186",
-            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-
+    
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-
-        // Get references to Firebase database
+    
+        // Get a reference to the Firebase database
         const db = getDatabase();
+    
+        // Function to add buttons to each row of the table
+        function addButtonsToTable(matricNo, studentName, admission, mode, status) {
+            // Create the button element
+            const viewButton = document.createElement("button");
+            viewButton.textContent = "View/Edit";
+            viewButton.classList.add("btn", "btn-primary");
+            // Add an event listener to open the modal and populate its input fields
+            viewButton.addEventListener("click", function() {
+                // Populate the modal input fields with student details
+                document.getElementById("matricNo").value = matricNo;
+                document.getElementById("name").value = studentName;
+                document.getElementById("intake").value = admission;
+                document.getElementById("mode").value = mode;
+                document.getElementById("status").value = status;
+                // Show the modal
+                showModal();
+            });
 
-        //filling the table ----------------------------
-        var studentNo = 0;
-        var tbody = document.getElementById ('tbody1');
+            // Create a new cell in the row and append the button
+            const td = document.createElement("td");
+            td.appendChild(viewButton);
 
-        function AddItemToTable(matricNo, studentName, admission, mode, status){
-            let trow = document.createElement("tr");
-            let td1 = document.createElement ('td');
-            let td2 = document.createElement ('td');
-            let td3 = document.createElement ('td');
-            let td4 = document.createElement ('td');
-            let td5 = document.createElement ('td');
-            let td6 = document.createElement ('td');
-
-            td1.textContent = ++studentNo;
-            td2.textContent = matricNo;
-            td3.textContent = studentName;
-            td4.textContent = admission;
-            td5.textContent = mode;
-            td6.textContent = status;
-
-            trow.appendChild(td1);
-            trow.appendChild(td2);
-            trow.appendChild(td3);
-            trow.appendChild(td4);
-            trow.appendChild(td5);
-            trow.appendChild(td6);
-
-            tbody.appendChild(trow);
-
-            }
-
-            function AddAllItemsToTable (TheStudent){
-                studentNo=0;
-                tbody.textContent="";
-                TheStudent.forEach(element => {
-                    AddItemToTable(element.matricNo, element.studentName, element.admission, element.mode, element.status);
-
-                });
+            return td;
         }
 
-        //getting data from database -------------------------
+        /// Function to add a row to the table
+        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status) {
+            const tbody = document.getElementById('tbody1');
+            const tr = document.createElement("tr");
 
-        function GetAllDataOnce(){
+            // Add cells to the row
+            const cells = [
+                studentNo,
+                matricNo,
+                studentName,
+                admission,
+                mode,
+                status
+            ];
+
+            // Append cells to the row
+            cells.forEach(cell => {
+                const td = document.createElement("td");
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+
+            // Create and append the button cell
+            const buttonTd = document.createElement("td");
+            const viewButton = document.createElement("button");
+            viewButton.textContent = "View/Edit";
+            viewButton.classList.add("btn", "btn-primary");
+            viewButton.addEventListener("click", function() {
+                // Populate the modal input fields with student details
+                document.getElementById("matricNo").value = matricNo;
+                document.getElementById("name").value = studentName;
+                document.getElementById("intake").value = admission;
+                document.getElementById("mode").value = mode;
+                document.getElementById("status").value = status;
+                // Show the modal
+                showModal();
+            });
+            buttonTd.appendChild(viewButton);
+            tr.appendChild(buttonTd);
+
+            // Append the row to the table body
+            tbody.appendChild(tr);
+        }
+    
+        // Function to retrieve data from the database and fill the table
+        function getAllDataOnce() {
             const dbRef = ref(db);
-
+    
             get(child(dbRef, "StudentInfo"))
             .then((snapshot) => {
-                var students = [];
+                const students = [];
                 snapshot.forEach((childSnapshot) => {
                     const matricNo = childSnapshot.key; // Get the matric number from the key
                     const studentData = childSnapshot.val(); // Retrieve other data
-                    students.push({...studentData, matricNo}); // Push matricNo along with other data
+                    const { studentName, admission, mode, status } = studentData;
+                    students.push({ matricNo, studentName, admission, mode, status });
                 });
-
-                AddAllItemsToTable(students);
+    
+                // Add each student's data to the table
+                students.forEach((student, index) => {
+                    addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status);
+                });
             });
         }
 
+        // Function to show the modal
+        function showModal() {
+            const modal = document.getElementById('exampleModalCenter');
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+        }
 
-        window.onload = GetAllDataOnce;
-       
+        // Event listener for the "Close" button
+        document.getElementById("closeModalBtn").addEventListener("click", function() {
+            closeModal();
+        });
+
+        // Event listener for the "Save changes" button
+        document.getElementById("saveChangesBtn").addEventListener("click", function() {
+            saveChanges();
+        });
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('exampleModalCenter');
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            modal.setAttribute('aria-modal', 'false');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+        }
+
+        // Function to save changes to the database
+        function saveChanges() {
+            // Retrieve updated student details from the modal input fields
+            const matricNo = document.getElementById("matricNo").value;
+            const newName = document.getElementById("name").value;
+            const newIntake = document.getElementById("intake").value;
+            const newMode = document.getElementById("mode").value;
+            const newStatus = document.getElementById("status").value;
+
+            // Reference to the student in the database
+            const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+            // Update student details in the database
+            update(studentRef, {
+                studentName: newName,
+                admission: newIntake,
+                mode: newMode,
+                status: newStatus
+            })
+            .then(() => {
+                // Close the modal after updating
+                closeModal();
+                // Reload the page to see the changes in the table
+                location.reload();
+            })
+            .catch((error) => {
+                console.error("Error updating student details: ", error);
+            });
+        }
+
+        // Call the function to fill the table when the window loads
+        window.onload = getAllDataOnce;
     </script>
+    
 </body>
 </html>
