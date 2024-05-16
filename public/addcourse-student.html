@@ -12,49 +12,45 @@
 <body>
     <!-- Main content -->
     <div id="mainContent">
-
         <label>Name: </label>
         <span id="displayName"></span> <button id="homeButton">Home</button>
         <br><br>
-
         <label>Email: </label>
         <span id="displayEmail"></span>
         <br><br>
-
         <label>Matric number</label>
         <span id="matricNoInput"></span>
         <br><br>
-
         <label>Mode: </label>
         <span id="modeInput"></span>
         <br><br>
-
         <label for="semesterSelect">Select Semester:</label>
             <select id="semesterSelect">
             </select>
         <br><br>
-
         <div id="courseList">
             <h4>Courses for Current Mode:</h4>
             <ul id="courseListItems"></ul>
         </div>
+        <div id="enrolledCourses">
+            <h4>Enrolled Courses:</h4>
+            <ul id="enrolledCoursesList"></ul>
+        </div>
     </div>
-
     <script type="module">
         // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
         
         // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-          authDomain: "test-99503.firebaseapp.com",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "test-99503",
-          storageBucket: "test-99503.appspot.com",
-          messagingSenderId: "1017306171186",
-          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
         };
       
         // Initialize Firebase
@@ -66,6 +62,7 @@
         let matricNoInput = document.getElementById('matricNoInput');
         let modeInput = document.getElementById('modeInput');
         let courseListItems = document.getElementById('courseListItems');
+        let enrolledCoursesList = document.getElementById('enrolledCoursesList');
 
         // Automatically retrieve user's name and email when the page loads
         window.addEventListener('load', () => {
@@ -113,6 +110,8 @@
 
                                 // Retrieve courses for current mode
                                 retrieveCoursesByMode(studentData.mode);
+                                // Retrieve enrolled courses
+                                displayEnrolledCourses(studentData.courseStatus?.courseTaken || []);
                                 // Exit the loop since we found the matching email
                                 return;
                             }
@@ -211,18 +210,36 @@
                                 const courseName = document.createElement('span');
                                 courseName.textContent = courseData.courseName;
                                 listItem.appendChild(courseName);
-                                
-                                // Add an "add" button beside the course name
-                                const addButton = document.createElement('button');
-                                addButton.textContent = 'Add';
-                                addButton.addEventListener('click', () => {
-                                    // Call a function to handle adding the course
-                                    addCourseToDatabase(courseData.courseCode);
-                                });
-                                listItem.appendChild(addButton);
 
-                                // Append the list item to the course list
-                                courseListItems.appendChild(listItem);
+                                // Check if the course is already taken
+                                const matricNo = document.getElementById('matricNoInput').textContent;
+                                const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+                                get(studentRef).then((snapshot) => {
+                                    if (snapshot.exists()) {
+                                        const studentData = snapshot.val();
+                                        const coursesTaken = studentData.courseStatus?.courseTaken || [];
+
+                                        if (coursesTaken.includes(courseData.courseCode)) {
+                                            // If the course is already taken, show "Already Taken"
+                                            const alreadyTakenText = document.createElement('span');
+                                            alreadyTakenText.textContent = ' (Already Taken)';
+                                            listItem.appendChild(alreadyTakenText);
+                                        } else {
+                                            // Add an "add" button beside the course name
+                                            const addButton = document.createElement('button');
+                                            addButton.textContent = 'Add';
+                                            addButton.addEventListener('click', () => {
+                                                // Call a function to handle adding the course
+                                                addCourseToDatabase(courseData.courseCode);
+                                            });
+                                            listItem.appendChild(addButton);
+                                        }
+
+                                        // Append the list item to the course list
+                                        courseListItems.appendChild(listItem);
+                                    }
+                                });
                             }
                         });
                     });
@@ -262,18 +279,36 @@
                                 const courseName = document.createElement('span');
                                 courseName.textContent = courseData.courseName;
                                 listItem.appendChild(courseName);
-                                
-                                // Add an "add" button beside the course name
-                                const addButton = document.createElement('button');
-                                addButton.textContent = 'Add';
-                                addButton.addEventListener('click', () => {
-                                    // Call a function to handle adding the course
-                                    addCourseToDatabase(courseData.courseCode);
-                                });
-                                listItem.appendChild(addButton);
 
-                                // Append the list item to the course list
-                                courseListItems.appendChild(listItem);
+                                // Check if the course is already taken
+                                const matricNo = document.getElementById('matricNoInput').textContent;
+                                const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+                                get(studentRef).then((snapshot) => {
+                                    if (snapshot.exists()) {
+                                        const studentData = snapshot.val();
+                                        const coursesTaken = studentData.courseStatus?.courseTaken || [];
+
+                                        if (coursesTaken.includes(courseData.courseCode)) {
+                                            // If the course is already taken, show "Already Taken"
+                                            const alreadyTakenText = document.createElement('span');
+                                            alreadyTakenText.textContent = ' (Already Taken)';
+                                            listItem.appendChild(alreadyTakenText);
+                                        } else {
+                                            // Add an "add" button beside the course name
+                                            const addButton = document.createElement('button');
+                                            addButton.textContent = 'Add';
+                                            addButton.addEventListener('click', () => {
+                                                // Call a function to handle adding the course
+                                                addCourseToDatabase(courseData.courseCode);
+                                            });
+                                            listItem.appendChild(addButton);
+                                        }
+
+                                        // Append the list item to the course list
+                                        courseListItems.appendChild(listItem);
+                                    }
+                                });
                             }
                         });
                     });
@@ -288,33 +323,63 @@
             });
         }
 
-        // Add event listener to the course list items
-        courseListItems.addEventListener('click', (event) => {
-            const target = event.target;
-            // Check if the clicked element is a button with the class 'add-course'
-            if (target.classList.contains('add-course')) {
-                // Retrieve the course name associated with the clicked button
-                const courseName = target.dataset.courseName;
-                // Call a function to handle adding the course to the database
-                addCourseToDatabase(courseName);
-            }
-        });
+        // Function to display enrolled courses with course names
+        function displayEnrolledCourses(courses) {
+            enrolledCoursesList.innerHTML = ''; // Clear previous list
+
+            // Reference to the CourseInfo node in the database
+            const courseInfoRef = ref(db, 'CourseInfo');
+
+            // Fetch course names based on course codes
+            get(courseInfoRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const courseData = childSnapshot.val();
+                        if (courses.includes(courseData.courseCode)) {
+                            const listItem = document.createElement('li');
+                            const courseName = document.createElement('span');
+                            courseName.textContent = courseData.courseName; // Display course name instead of code
+                            listItem.appendChild(courseName);
+
+                            // Add a "remove" button beside the course name
+                            const removeButton = document.createElement('button');
+                            removeButton.textContent = 'Remove';
+                            removeButton.addEventListener('click', () => {
+                                removeCourseFromDatabase(courseData.courseCode); // Pass course code
+                            });
+                            listItem.appendChild(removeButton);
+
+                            // Append the list item to the enrolled courses list
+                            enrolledCoursesList.appendChild(listItem);
+                        }
+                    });
+                } else {
+                    // No data found in the CourseInfo node
+                    alert('No course data found in the database');
+                }
+            }).catch((error) => {
+                // Error handling
+                alert('Error retrieving course data: ' + error);
+                console.error(error);
+            });
+        }
+
 
         // Function to add a course to the database
-        function addCourseToDatabase(courseName) {
+        function addCourseToDatabase(courseCode) {
             // Retrieve the current user's matric number
             const matricNo = document.getElementById('matricNoInput').textContent;
 
             // Reference to the StudentInfo node in the database
             const studentRef = ref(db, `StudentInfo/${matricNo}`);
 
-            // Retrieve the current value of 'courseTaken' from the database
+            // Retrieve the current value of 'courseStatus' from the database
             get(studentRef).then((snapshot) => {
                 if (snapshot.exists()) {
                     const studentData = snapshot.val();
-                    // Check if 'courseTaken' exists
+                    // Check if 'courseStatus' exists
                     if (!studentData.hasOwnProperty('courseStatus')) {
-                        // If 'courseTaken' doesn't exist, initialize it as an empty object
+                        // If 'courseStatus' doesn't exist, initialize it as an empty object
                         studentData.courseStatus = {};
                     }
                     // Add the course to 'courseTaken' if it's not already added
@@ -322,14 +387,17 @@
                         studentData.courseStatus.courseTaken = [];
                     }
                     // Check if the course is already in the list
-                    if (!studentData.courseStatus.courseTaken.includes(courseName)) {
+                    if (!studentData.courseStatus.courseTaken.includes(courseCode)) {
                         // Add the course to the list
-                        studentData.courseStatus.courseTaken.push(courseName);
+                        studentData.courseStatus.courseTaken.push(courseCode);
                         // Update the database with the new 'courseTaken' value
                         set(studentRef, studentData)
                             .then(() => {
                                 // Provide visual feedback to the user (optional)
                                 alert('Course added successfully!');
+                                // Update the UI to reflect the added course
+                                displayEnrolledCourses(studentData.courseStatus.courseTaken);
+                                retrieveCoursesByMode(studentData.mode); // Refresh the course list
                             })
                             .catch((error) => {
                                 alert('Error adding course: ' + error);
@@ -350,15 +418,61 @@
             });
         }
 
+        // Function to remove a course from the database
+        function removeCourseFromDatabase(courseCode) {
+            // Retrieve the current user's matric number
+            const matricNo = document.getElementById('matricNoInput').textContent;
 
-        // Function to navigate to home page
-        function goToHome() {
-            window.location.href = 'home-student.html';
+            // Reference to the StudentInfo node in the database
+            const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+            // Retrieve the current value of 'courseStatus' from the database
+            get(studentRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const studentData = snapshot.val();
+                    // Check if 'courseStatus' exists
+                    if (studentData.hasOwnProperty('courseStatus') && studentData.courseStatus.hasOwnProperty('courseTaken')) {
+                        // Remove the course from the list
+                        const index = studentData.courseStatus.courseTaken.indexOf(courseCode);
+                        if (index > -1) {
+                            studentData.courseStatus.courseTaken.splice(index, 1);
+                            // Update the database with the new 'courseTaken' value
+                            set(studentRef, studentData)
+                                .then(() => {
+                                    // Provide visual feedback to the user (optional)
+                                    alert('Course removed successfully!');
+                                    // Update the UI to reflect the removed course
+                                    displayEnrolledCourses(studentData.courseStatus.courseTaken);
+                                    retrieveCoursesByMode(studentData.mode); // Refresh the course list
+                                })
+                                .catch((error) => {
+                                    alert('Error removing course: ' + error);
+                                    console.error(error);
+                                });
+                        }
+                    } else {
+                        // If the courseStatus or courseTaken doesn't exist, notify the user
+                        alert('Course not found in student data!');
+                    }
+                } else {
+                    // If the student data doesn't exist, display an error message
+                    alert('Student data not found!');
+                }
+            }).catch((error) => {
+                             // Handle errors
+                             alert('Error retrieving student data: ' + error);
+                console.error(error);
+            });
         }
 
         // Event listener for the Home button
         const homeButton = document.getElementById('homeButton');
         homeButton.addEventListener('click', goToHome);
+
+        // Function to navigate to home page
+        function goToHome() {
+            window.location.href = 'home-student.html';
+        }
 
     </script>
 </body>

@@ -258,9 +258,22 @@
                             const [courseMode, courseSem] = courseSemester.split('-');
                             if (courseMode === mode && parseInt(courseSem.charAt(courseSem.length - 1)) === semester) {
                                 // Add course to the course list
-                                const courseListItem = document.createElement('li');
-                                courseListItem.textContent = courseData.courseName;
-                                courseListItems.appendChild(courseListItem);
+                                const listItem = document.createElement('li');
+                                const courseName = document.createElement('span');
+                                courseName.textContent = courseData.courseName;
+                                listItem.appendChild(courseName);
+                                
+                                // Add an "add" button beside the course name
+                                const addButton = document.createElement('button');
+                                addButton.textContent = 'Add';
+                                addButton.addEventListener('click', () => {
+                                    // Call a function to handle adding the course
+                                    addCourseToDatabase(courseData.courseCode);
+                                });
+                                listItem.appendChild(addButton);
+
+                                // Append the list item to the course list
+                                courseListItems.appendChild(listItem);
                             }
                         });
                     });
