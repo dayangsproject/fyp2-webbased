@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/styles-2.css" />
+</head>
+<body>
+    <!-- sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+        <ul class="menu_items">
+            
+            <i id="sidebarOpen"></i>
+
+            <li class="item no-click">
+            <a class="nav_link">
+                <span class="navlink_icon">
+                <i class='bx bx-menu' ></i>
+                </span>
+                <h3>Menu</h3>
+            </a>
+            </li>
+
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-user-circle'></i>
+                </span>
+                <span class="navlink">Profile</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="admin-profile.html" class="nav_link sublink">My profile</a>
+                <a href="password.html" class="nav_link sublink">Change password</a>
+            </ul>
+            </li>
+
+            <li class="item">
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                <i class='bx bxs-food-menu'></i>
+                </span>
+                <span class="navlink">Course</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="#" class="nav_link sublink">Add course</a>
+                <a href="#" class="nav_link sublink">Edit course</a>
+            </ul>
+            </li>
+
+
+            <li class="item">
+            <a href="#" class="nav_link" id="signOutButton">
+                <span class="navlink_icon">
+                <i class='bx bx-exit' ></i>
+                </span>
+                <span class="navlink">Log Out</span>
+            </a>
+            </li>
+            
+            <li class="item">
+            <a href="#" class="nav_link">
+                <span class="navlink_icon">
+                <i id="darkLight"></i>
+                </span>
+                <span class="navlink"> </span>
+            </a>
+            </li>
+
+        </ul>
+
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+            <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-expand-horizontal'></i>
+            </div>
+            <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-collapse-horizontal' ></i>
+            </div>
+        </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div id="mainContent">
+        <label>Name: </label>
+        <span id="displayName"></span>
+        <br><br>
+
+        <label>Email: </label>
+        <span id="displayEmail"></span>
+        <br><br>
+
+        <label>Phone Number: </label>
+        <input type="text" id="phoneNumberInput" />
+        <br><br>
+
+        <label>Location: </label>
+        <input type="text" id="locationInput" />
+        <br><br>
+
+        <button id="saveButton">Save</button> 
+        <button id="homeButton">Home</button>
+    </div>
+
+    <script type="module" src="js/sidebar.js"></script>
+    <script type="module">
+        // Import firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, child, get, set, update, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+          // Firebase config details
+        apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+        authDomain: "test-99503.firebaseapp.com",
+        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "test-99503",
+        storageBucket: "test-99503.appspot.com",
+        messagingSenderId: "1017306171186",
+        appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Get references to Firebase database
+        const db = getDatabase();
+
+        let phoneNumberInput = document.getElementById('phoneNumberInput');
+        let locationInput = document.getElementById('locationInput');
+
+        let saveButton = document.getElementById('saveButton');
+
+        // Automatically retrieve user's name, email, phone number, and location when the page loads
+        window.addEventListener('load', () => {
+            const userInfo = JSON.parse(sessionStorage.getItem("user-info"));
+            if (userInfo) {
+                document.getElementById('displayName').textContent = userInfo.name;
+                document.getElementById('displayEmail').textContent = userInfo.email;
+                phoneNumberInput.value = userInfo.phoneNumber || ''; // Set default value to empty string if undefined
+                locationInput.value = userInfo.location || ''; // Set default value to empty string if undefined
+            }       
+
+            loadData(); // Call the loadData function here
+        });
+
+
+        // Function to save or update administrator data
+        function saveData() {
+            const userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+            if (!userCreds) {
+                alert('User credentials not available');
+                return;
+            }
+
+            const userEmail = userCreds.email;
+
+            update(ref(db, 'AdminInfo/' + userEmail.replace('.', '_')), {
+                name: document.getElementById('displayName').textContent,
+                email: document.getElementById('displayEmail').textContent,
+                phoneNumber: phoneNumberInput.value,
+                location: locationInput.value
+            })
+            .then(() => {
+                alert('Data saved successfully');
+                // Update sessionStorage with new data
+                const updatedUserInfo = JSON.parse(sessionStorage.getItem("user-info"));
+                updatedUserInfo.phoneNumber = phoneNumberInput.value;
+                updatedUserInfo.location = locationInput.value;
+                sessionStorage.setItem("user-info", JSON.stringify(updatedUserInfo));
+            })
+            .catch((error) => {
+                alert('Error: ' + error);
+                console.log(error);
+            });
+        }
+
+
+        // Function to load data based on user's email
+        function loadData() {
+            const userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+            if (userCreds) {
+                const userEmail = userCreds.email;
+
+                const adminInfoRef = ref(db, 'AdminInfo/' + userEmail.replace('.', '_'));
+
+                get(adminInfoRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const adminData = snapshot.val();
+                        phoneNumberInput.value = adminData.phoneNumber; // Update phoneNumberInput
+                        locationInput.value = adminData.location; // Update locationInput
+                    } else {
+                        alert('Please fill with your information');
+                    }
+                }).catch((error) => {
+                    alert('Error retrieving data: ' + error);
+                    console.error(error);
+                });
+            } else {
+                alert('User credentials not available');
+            }
+        }
+
+
+        // Function to sign out user
+        function signOut() {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'index.html';
+        }
+
+        // Event listener to sign out user
+        const signOutButton = document.getElementById('signOutButton');
+        signOutButton.addEventListener('click', signOut);
+
+        // Event listener for the Save button
+        saveButton.addEventListener('click', saveData);
+
+        // Function to navigate to home page
+        function goToHome() {
+            window.location.href = 'home-aa.html';
+        }
+
+        // Event listener for the Home button
+        const homeButton = document.getElementById('homeButton');
+        homeButton.addEventListener('click', goToHome);
+        </script>
+</body>
+</html>
