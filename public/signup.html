@@ -7,156 +7,157 @@
  
   <!-- CSS File -->
   <link rel="stylesheet" href="css/styles-1.css"> 
+
 </head>
 <body>
-  <div class="container">
-    <div class="registration form">
-        <header>Signup</header>
-        <form id="signupForm" class="w-25 m-4">
-            <div class="form-floating mb-3">
-                <label for="nameInput">Name</label>
-                <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+    <div class="container">
+        <div class="registration form">
+            <header>Signup</header>
+            <form id="signupForm" class="w-25 m-4">
+                <div class="form-floating mb-3">
+                    <label for="nameInput">Name</label>
+                    <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                </div>
+                <div class="form-floating mb-3">
+                    <label for="emailInput">Email address</label>
+                    <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
+                </div>
+                <div class="form-floating mb-3">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                    <small id="passwordHelp" class="form-text text-muted password-help"></small>
+                </div><br>
+                <div class="form-floating mb-3">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password">
+                </div>
+                <button type="submit" class="button">Signup</button>
+            </form>
+            <!-- Error message div for signup -->
+            <div id="signupError" class="error-message"></div><br>
+            <div class="signup">
+                <span class="signup">Already have an account? <a href="index.html">Login</a></span>
             </div>
-            <div class="form-floating mb-3">
-                <label for="emailInput">Email address</label>
-                <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
-            </div>
-            <div class="form-floating mb-3">
-                <label for="passwordInput">Password</label>
-                <input type="password" class="form-control" id="passwordInput" placeholder="Password">
-                <small id="passwordHelp" class="form-text text-muted">Password must contain at least 8 characters.</small>
-            </div>
-            <div class="form-floating mb-3">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password">
-            </div>
-            <button type="submit" class="button">Signup</button>
-        </form>
-        <!-- Error message div for signup -->
-        <div id="signupError" class="error-message"></div><br>
-        <div class="signup">
-            <span class="signup">Already have an account? <a href="index.html">Login</a></span>
         </div>
     </div>
-  </div>
     
-  <!-- Firebase Configuration and JavaScript -->
-  <script type="module">
+    <!-- Firebase Configuration and JavaScript -->
+    <script type="module">
 
-    // Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-      authDomain: "test-99503.firebaseapp.com",
-      projectId: "test-99503",
-      storageBucket: "test-99503.appspot.com",
-      messagingSenderId: "1017306171186",
-      appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase();
-    const auth = getAuth(app);
+        // Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+        authDomain: "test-99503.firebaseapp.com",
+        projectId: "test-99503",
+        storageBucket: "test-99503.appspot.com",
+        messagingSenderId: "1017306171186",
+        appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
 
-    let nameInput = document.getElementById('nameInput');
-    let emailInput = document.getElementById('emailInput');
-    let passwordInput = document.getElementById('passwordInput');
-    let confirmPasswordInput = document.getElementById('confirmPassword');
-    let signupForm = document.getElementById('signupForm');
-    let signupError = document.getElementById('signupError');
-    let passwordHelp = document.getElementById('passwordHelp');
+        let nameInput = document.getElementById('nameInput');
+        let emailInput = document.getElementById('emailInput');
+        let passwordInput = document.getElementById('passwordInput');
+        let confirmPasswordInput = document.getElementById('confirmPassword');
+        let signupForm = document.getElementById('signupForm');
+        let signupError = document.getElementById('signupError');
+        let passwordHelp = document.getElementById('passwordHelp');
 
-    let ValidatePassword = () => {
-        const password = passwordInput.value;
+        let ValidatePassword = () => {
+            const password = passwordInput.value;
 
-        // Regular expressions for password requirements
-        const uppercaseRegex = /[A-Z]/;
-        const lowercaseRegex = /[a-z]/;
-        const numberRegex = /[0-9]/;
-        const specialCharRegex = /[@$!%*?&]/;
+            // Regular expressions for password requirements
+            const uppercaseRegex = /[A-Z]/;
+            const lowercaseRegex = /[a-z]/;
+            const numberRegex = /[0-9]/;
+            const specialCharRegex = /[@$!%*?&]/;
 
-        let errors = [];
+            let errors = [];
 
-        if (password.length < 8) {
-            errors.push("Password must contain at least 8 characters.");
-        }
+            if (password.length < 8) {
+                errors.push("Password must contain at least 8 characters.");
+            }
 
-        if (!uppercaseRegex.test(password)) {
-            errors.push("Password must contain at least one uppercase letter.");
-        }
+            if (!uppercaseRegex.test(password)) {
+                errors.push("Password must contain at least one uppercase letter.");
+            }
 
-        if (!lowercaseRegex.test(password)) {
-            errors.push("Password must contain at least one lowercase letter.");
-        }
+            if (!lowercaseRegex.test(password)) {
+                errors.push("Password must contain at least one lowercase letter.");
+            }
 
-        if (!numberRegex.test(password)) {
-            errors.push("Password must contain at least one number.");
-        }
+            if (!numberRegex.test(password)) {
+                errors.push("Password must contain at least one number.");
+            }
 
-        if (!specialCharRegex.test(password)) {
-            errors.push("Password must contain at least one special character.");
-        }
+            if (!specialCharRegex.test(password)) {
+                errors.push("Password must contain at least one special character.");
+            }
 
-        return errors;
-    };
+            return errors;
+        };
 
-    let RegisterUser = evt => {
-        evt.preventDefault();
+        let RegisterUser = evt => {
+            evt.preventDefault();
 
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
 
-        const passwordErrors = ValidatePassword();
+            const passwordErrors = ValidatePassword();
 
-        if (!name || !email || !password || !confirmPassword) {
-            signupError.textContent = "All fields are required.";
-            return;
-        }
+            if (!name || !email || !password || !confirmPassword) {
+                signupError.textContent = "All fields are required.";
+                return;
+            }
 
-        if (password !== confirmPassword) {
-            signupError.textContent = "Passwords do not match.";
-            return;
-        }
+            if (password !== confirmPassword) {
+                signupError.textContent = "Passwords do not match.";
+                return;
+            }
 
-        if (passwordErrors.length > 0) {
-            signupError.textContent = passwordErrors.join(" ");
-            return;
-        }
+            if (passwordErrors.length > 0) {
+                signupError.textContent = passwordErrors.join(" ");
+                return;
+            }
 
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((credentials)=>{
-              // Save user data to the database
-              const uid = credentials.user.uid;
-              set(ref(db, 'UsersAuthList/' + uid), { name })
-                .then(() => {
-                    // Redirect to login page after successful signup
-                    window.location.href = 'index.html';
-                    alert('Account successfully created.');
-                })
-                .catch(error => {
-                    signupError.textContent = "Error saving user data: " + error.message;
-                });
-          })
-          .catch((error)=>{
-              signupError.textContent = "Error creating user: " + error.message;
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((credentials)=>{
+                // Save user data to the database
+                const uid = credentials.user.uid;
+                set(ref(db, 'UsersAuthList/' + uid), { name })
+                    .then(() => {
+                        // Redirect to login page after successful signup
+                        window.location.href = 'index.html';
+                        alert('Account successfully created.');
+                    })
+                    .catch(error => {
+                        signupError.textContent = "Error saving user data: " + error.message;
+                    });
+            })
+            .catch((error)=>{
+                signupError.textContent = "Error creating user: " + error.message;
+            });
+        };
+
+        signupForm.addEventListener('submit', RegisterUser);
+
+        // Add event listener for password input to show real-time error messages
+        passwordInput.addEventListener('input', () => {
+            const passwordErrors = ValidatePassword();
+            passwordHelp.textContent = passwordErrors.join(" ");
         });
-    };
-
-    signupForm.addEventListener('submit', RegisterUser);
-
-    // Add event listener for password input to show real-time error messages
-    passwordInput.addEventListener('input', () => {
-        const passwordErrors = ValidatePassword();
-        passwordHelp.textContent = passwordErrors.join(" ");
-    });
 
   </script>
 

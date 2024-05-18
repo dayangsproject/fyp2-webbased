@@ -10,80 +10,80 @@
 
 </head>
 <body>
-  <div class="container">
-    <div class="login form">
-        <header>Login</header>
-        <form id="MainForm">
-            <div class="form-group">
-                <label for="emailInput">Email address</label>
-                <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
+    <div class="container">
+        <div class="login form">
+            <header>Login</header>
+            <form id="MainForm">
+                <div class="form-group">
+                    <label for="emailInput">Email address</label>
+                    <input type="email" class="form-control" id="emailInput" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Enter your password">
+                </div>
+                <div class="form-group form-check">
+                    <label id="forgotpasslabel" style="cursor: pointer; margin-top: 8px; margin-left: 2px;"> Forgot Password</label>
+                </div>            
+                <button type="submit" class="button">Log In</button>
+            </form>
+            <!-- Error message div for login -->
+            <div id="loginError" class="error-message"></div><br>
+            <div class="signup">
+                <span class="signup">Don't have an account? <a href="signup.html">Signup</a></span>
             </div>
-            <div class="form-group">
-                <label for="passwordInput">Password</label>
-                <input type="password" class="form-control" id="passwordInput" placeholder="Enter your password">
-            </div>
-            <div class="form-group form-check">
-                <label id="forgotpasslabel" style="cursor: pointer; margin-top: 8px; margin-left: 2px;"> Forgot Password</label>
-            </div>            
-            <button type="submit" class="button">Log In</button>
-        </form>
-        <!-- Error message div for login -->
-        <div id="loginError" class="error-message"></div><br>
-        <div class="signup">
-            <span class="signup">Don't have an account? <a href="signup.html">Signup</a></span>
         </div>
     </div>
-</div>
 
     <!-- Firebase Configuration and JavaScript -->
     <script type="module">
 
-    // Firebase SDKs 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-  
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-      authDomain: "test-99503.firebaseapp.com",
-      projectId: "test-99503",
-      storageBucket: "test-99503.appspot.com",
-      messagingSenderId: "1017306171186",
-      appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase();
-    const auth = getAuth(app);
-    const dbref = ref(db);
+        // Firebase SDKs 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+        authDomain: "test-99503.firebaseapp.com",
+        projectId: "test-99503",
+        storageBucket: "test-99503.appspot.com",
+        messagingSenderId: "1017306171186",
+        appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
+        const dbref = ref(db);
 
-    let emailInput = document.getElementById('emailInput');
-    let passwordInput = document.getElementById('passwordInput');
-    let MainForm = document.getElementById('MainForm');
-    let ForgotPassLabel = document.getElementById('forgotpasslabel');
+        let emailInput = document.getElementById('emailInput');
+        let passwordInput = document.getElementById('passwordInput');
+        let MainForm = document.getElementById('MainForm');
+        let ForgotPassLabel = document.getElementById('forgotpasslabel');
 
-    let SignInUser = evt => {
-    evt.preventDefault();
+        let SignInUser = evt => {
+        evt.preventDefault();
 
-    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then((userCredential) => {
-            // Retrieve the user's email from the userCredential object
-            const userEmail = userCredential.user.email;
+        signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+            .then((userCredential) => {
+                // Retrieve the user's email from the userCredential object
+                const userEmail = userCredential.user.email;
 
-            // Retrieve the user's name from the database
-            get(child(dbref, 'UsersAuthList/' + userCredential.user.uid)).then((snapshot) => {
-                if (snapshot.exists) {
-                    const userName = snapshot.val().name;
+                // Retrieve the user's name from the database
+                get(child(dbref, 'UsersAuthList/' + userCredential.user.uid)).then((snapshot) => {
+                    if (snapshot.exists) {
+                        const userName = snapshot.val().name;
 
-                    // Store user info and credentials in session storage
-                    sessionStorage.setItem("user-info", JSON.stringify({
-                        name: userName,
-                        email: userEmail,
-                    }));
-                    sessionStorage.setItem("user-creds", JSON.stringify(userCredential.user));
+                        // Store user info and credentials in session storage
+                        sessionStorage.setItem("user-info", JSON.stringify({
+                            name: userName,
+                            email: userEmail,
+                        }));
+                        sessionStorage.setItem("user-creds", JSON.stringify(userCredential.user));
 
                     // Redirect to the appropriate page
                     const firstChar = userEmail.charAt(0);
@@ -99,21 +99,21 @@
         });
     }
 
-    let ForgotPassword = () => {
-	sendPasswordResetEmail(auth, emailInput.value)
-	.then(()=>{
-		alert("A password reset link has been sent to your email.");
-	})
-	.catch((error) => {
-		alert('Error: ' + error);
-		console.log(error.code);
-		console.log(error.message);
+        let ForgotPassword = () => {
+        sendPasswordResetEmail(auth, emailInput.value)
+        .then(()=>{
+            alert("A password reset link has been sent to your email.");
+        })
+        .catch((error) => {
+            alert('Error: ' + error);
+            console.log(error.code);
+            console.log(error.message);
 
-                });
-    }
+                    });
+        }
 
-    ForgotPassLabel.addEventListener('click', ForgotPassword); 
-    MainForm.addEventListener('submit', SignInUser);
-  </script>
+        ForgotPassLabel.addEventListener('click', ForgotPassword); 
+        MainForm.addEventListener('submit', SignInUser);
+    </script>
 </body>
 </html>
