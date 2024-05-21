@@ -104,6 +104,10 @@
         <span id="matricNo"></span>
         <br><br>
 
+        <label>Phone Number: </label>
+        <span id="phoneNumber"></span>
+        <br><br>
+
         <label>Status: </label>
         <span id="status"></span>
         <br><br>
@@ -161,6 +165,7 @@
                             if (studentData.email === userEmail) {
                                 // Populate the fields with the user's data
                                 document.getElementById('matricNo').textContent = childSnapshot.key;
+                                document.getElementById('phoneNumber').textContent = studentData.phoneNumber;
                                 document.getElementById('status').textContent = studentData.status;
                                 document.getElementById('admission').textContent = studentData.admission;
                                 document.getElementById('mode').textContent = studentData.mode;
