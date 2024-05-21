@@ -116,44 +116,43 @@
     <script type="module">
         // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import{getDatabase, ref, child, get, set, update, remove} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
         
         // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-          authDomain: "test-99503.firebaseapp.com",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "test-99503",
-          storageBucket: "test-99503.appspot.com",
-          messagingSenderId: "1017306171186",
-          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
         };
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-
+    
         // Get references to Firebase database
         const db = getDatabase();
-
+    
         let courseCodeInput = document.getElementById('courseCodeInput');
         let courseNameInput = document.getElementById('courseNameInput');
         let creditHourInput = document.getElementById('creditHourInput');
         let courseStatus = document.getElementById('courseStatus');
         let courseSemester = document.getElementById('courseSemester');
-
         let AddButton = document.getElementById('AddButton');
-
-        // function to add course data
+    
+        // Function to add course data
         // using course code to save course data
-        function AddData(){ 
+        function AddData() { 
             // Construct an array to store selected semesters
             let selectedSemesters = [];
-
+    
             // Iterate through each intake type and check which semesters are selected
             courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
                 selectedSemesters.push(input.value);
             });
-
+    
             set (ref(db, 'CourseInfo/' + courseCodeInput.value), {
                 courseCode: courseCodeInput.value,
                 courseName: courseNameInput.value,
@@ -161,18 +160,36 @@
                 courseStatus: courseStatus.value,
                 courseSemester: selectedSemesters // Store selected semesters array
             })
-            .then(()=>{
+            .then(() => {
                 alert('Data added successfully');
+                location.reload(); // Reload the page after successful addition
             })
-            .catch((error)=>{
+            .catch((error) => {
                 alert('Error: ' + error);
                 console.log(error);
             })
         }
-
+    
+        // Function to check if any input field is empty
+        function checkInputs() {
+            const inputsFilled = courseCodeInput.value.trim() !== '' &&
+                                 courseNameInput.value.trim() !== '' &&
+                                 creditHourInput.value.trim() !== '';
+    
+            AddButton.disabled = !inputsFilled;
+        }
+    
+        // Add event listeners for input fields
+        courseCodeInput.addEventListener('input', checkInputs);
+        courseNameInput.addEventListener('input', checkInputs);
+        creditHourInput.addEventListener('input', checkInputs);
+    
+        // Add event listener for "Add" button
         AddButton.addEventListener('click', AddData);
-
-      </script>
-
+    
+        // Initially check inputs on page load
+        checkInputs();
+    </script>
+    
 </body>
 </html>

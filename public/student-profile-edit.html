@@ -136,7 +136,7 @@
         </select>
         <br><br>
 
-        <button id="AddButton">Add</button> 
+        <button id="AddButton">Save</button> 
         <button id="homeButton">Home</button>
     </div>
 
@@ -219,6 +219,8 @@
                 })
                 .then(() => {
                     alert('Data added successfully');
+                    // Redirect to student-profile.html
+                    window.location.href = 'student-profile.html';
                 })
                 .catch((error) => {
                     alert('Error: ' + error);
@@ -252,6 +254,8 @@
                 })
                 .then(() => {
                     alert('Data updated successfully');
+                    // Redirect to student-profile.html
+                    window.location.href = 'student-profile.html';
                 })
                 .catch((error) => {
                     alert('Error: ' + error);

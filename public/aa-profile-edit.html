@@ -205,6 +205,9 @@
                 updatedUserInfo.role = roleInput.value;
                 updatedUserInfo.location = locationInput.value;
                 sessionStorage.setItem("user-info", JSON.stringify(updatedUserInfo));
+                
+                // Redirect to aa-profile.html
+                window.location.href = 'aa-profile.html';
             })
             .catch((error) => {
                 alert('Error: ' + error);
