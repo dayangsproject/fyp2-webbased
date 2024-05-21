@@ -263,7 +263,7 @@
             }
         });
 
-       // Function to retrieve courses based on mode of study
+        // Function to retrieve courses based on mode of study
         function retrieveCoursesByMode(mode) {
             // Reference to the CourseInfo node in the database
             const courseInfoRef = ref(db, 'CourseInfo');
@@ -279,50 +279,53 @@
                         // Retrieve course data
                         const courseData = childSnapshot.val();
                         
-                        // Iterate over each semester in courseData.courseSemester
-                        courseData.courseSemester.forEach((semester) => {
-                            // Extract mode from semester string
-                            const courseMode = semester.split('-')[0];
+                        // Check if the course status is "Active"
+                        if (courseData.courseStatus === "Active") {
+                            // Iterate over each semester in courseData.courseSemester
+                            courseData.courseSemester.forEach((semester) => {
+                                // Extract mode from semester string
+                                const courseMode = semester.split('-')[0];
 
-                            // Check if the mode matches the student's mode
-                            if (courseMode === mode) {
-                                // Add course to the course list
-                                const listItem = document.createElement('li');
-                                const courseName = document.createElement('span');
-                                courseName.textContent = courseData.courseName;
-                                listItem.appendChild(courseName);
+                                // Check if the mode matches the student's mode
+                                if (courseMode === mode) {
+                                    // Add course to the course list
+                                    const listItem = document.createElement('li');
+                                    const courseName = document.createElement('span');
+                                    courseName.textContent = courseData.courseName;
+                                    listItem.appendChild(courseName);
 
-                                // Check if the course is already taken
-                                const matricNo = document.getElementById('matricNoInput').textContent;
-                                const studentRef = ref(db, `StudentInfo/${matricNo}`);
+                                    // Check if the course is already taken
+                                    const matricNo = document.getElementById('matricNoInput').textContent;
+                                    const studentRef = ref(db, `StudentInfo/${matricNo}`);
 
-                                get(studentRef).then((snapshot) => {
-                                    if (snapshot.exists()) {
-                                        const studentData = snapshot.val();
-                                        const coursesTaken = studentData.courseStatus?.courseTaken || [];
+                                    get(studentRef).then((snapshot) => {
+                                        if (snapshot.exists()) {
+                                            const studentData = snapshot.val();
+                                            const coursesTaken = studentData.courseStatus?.courseTaken || [];
 
-                                        if (coursesTaken.includes(courseData.courseCode)) {
-                                            // If the course is already taken, show "Already Taken"
-                                            const alreadyTakenText = document.createElement('span');
-                                            alreadyTakenText.textContent = ' (Already Taken)';
-                                            listItem.appendChild(alreadyTakenText);
-                                        } else {
-                                            // Add an "add" button beside the course name
-                                            const addButton = document.createElement('button');
-                                            addButton.textContent = 'Add';
-                                            addButton.addEventListener('click', () => {
-                                                // Call a function to handle adding the course
-                                                addCourseToDatabase(courseData.courseCode);
-                                            });
-                                            listItem.appendChild(addButton);
+                                            if (coursesTaken.includes(courseData.courseCode)) {
+                                                // If the course is already taken, show "Already Taken"
+                                                const alreadyTakenText = document.createElement('span');
+                                                alreadyTakenText.textContent = ' (Already Taken)';
+                                                listItem.appendChild(alreadyTakenText);
+                                            } else {
+                                                // Add an "add" button beside the course name
+                                                const addButton = document.createElement('button');
+                                                addButton.textContent = 'Add';
+                                                addButton.addEventListener('click', () => {
+                                                    // Call a function to handle adding the course
+                                                    addCourseToDatabase(courseData.courseCode);
+                                                });
+                                                listItem.appendChild(addButton);
+                                            }
+
+                                            // Append the list item to the course list
+                                            courseListItems.appendChild(listItem);
                                         }
-
-                                        // Append the list item to the course list
-                                        courseListItems.appendChild(listItem);
-                                    }
-                                });
-                            }
-                        });
+                                    });
+                                }
+                            });
+                        }
                     });
                 } else {
                     // No data found in the CourseInfo node
@@ -351,47 +354,50 @@
                         // Retrieve course data
                         const courseData = childSnapshot.val();
                         
-                        // Check if the course matches the selected semester and mode
-                        courseData.courseSemester.forEach((courseSemester) => {
-                            const [courseMode, courseSem] = courseSemester.split('-');
-                            if (courseMode === mode && parseInt(courseSem.charAt(courseSem.length - 1)) === semester) {
-                                // Add course to the course list
-                                const listItem = document.createElement('li');
-                                const courseName = document.createElement('span');
-                                courseName.textContent = courseData.courseName;
-                                listItem.appendChild(courseName);
+                        // Check if the course status is "Active"
+                        if (courseData.courseStatus === "Active") {
+                            // Iterate over each semester in courseData.courseSemester
+                            courseData.courseSemester.forEach((courseSemester) => {
+                                const [courseMode, courseSem] = courseSemester.split('-');
+                                if (courseMode === mode && parseInt(courseSem.charAt(courseSem.length - 1)) === semester) {
+                                    // Add course to the course list
+                                    const listItem = document.createElement('li');
+                                    const courseName = document.createElement('span');
+                                    courseName.textContent = courseData.courseName;
+                                    listItem.appendChild(courseName);
 
-                                // Check if the course is already taken
-                                const matricNo = document.getElementById('matricNoInput').textContent;
-                                const studentRef = ref(db, `StudentInfo/${matricNo}`);
+                                    // Check if the course is already taken
+                                    const matricNo = document.getElementById('matricNoInput').textContent;
+                                    const studentRef = ref(db, `StudentInfo/${matricNo}`);
 
-                                get(studentRef).then((snapshot) => {
-                                    if (snapshot.exists()) {
-                                        const studentData = snapshot.val();
-                                        const coursesTaken = studentData.courseStatus?.courseTaken || [];
+                                    get(studentRef).then((snapshot) => {
+                                        if (snapshot.exists()) {
+                                            const studentData = snapshot.val();
+                                            const coursesTaken = studentData.courseStatus?.courseTaken || [];
 
-                                        if (coursesTaken.includes(courseData.courseCode)) {
-                                            // If the course is already taken, show "Already Taken"
-                                            const alreadyTakenText = document.createElement('span');
-                                            alreadyTakenText.textContent = ' (Already Taken)';
-                                            listItem.appendChild(alreadyTakenText);
-                                        } else {
-                                            // Add an "add" button beside the course name
-                                            const addButton = document.createElement('button');
-                                            addButton.textContent = 'Add';
-                                            addButton.addEventListener('click', () => {
-                                                // Call a function to handle adding the course
-                                                addCourseToDatabase(courseData.courseCode);
-                                            });
-                                            listItem.appendChild(addButton);
+                                            if (coursesTaken.includes(courseData.courseCode)) {
+                                                // If the course is already taken, show "Already Taken"
+                                                const alreadyTakenText = document.createElement('span');
+                                                alreadyTakenText.textContent = ' (Already Taken)';
+                                                listItem.appendChild(alreadyTakenText);
+                                            } else {
+                                                // Add an "add" button beside the course name
+                                                const addButton = document.createElement('button');
+                                                addButton.textContent = 'Add';
+                                                addButton.addEventListener('click', () => {
+                                                    // Call a function to handle adding the course
+                                                    addCourseToDatabase(courseData.courseCode);
+                                                });
+                                                listItem.appendChild(addButton);
+                                            }
+
+                                            // Append the list item to the course list
+                                            courseListItems.appendChild(listItem);
                                         }
-
-                                        // Append the list item to the course list
-                                        courseListItems.appendChild(listItem);
-                                    }
-                                });
-                            }
-                        });
+                                    });
+                                }
+                            });
+                        }
                     });
                 } else {
                     // No data found in the CourseInfo node
