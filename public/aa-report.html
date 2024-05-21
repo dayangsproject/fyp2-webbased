@@ -219,6 +219,17 @@
             }
         }
 
+        // Function to sign out user
+        function signOut() {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'index.html';
+        }
+
+        // Event listener to sign out user
+        const signOutButton = document.getElementById('signOutButton');
+        signOutButton.addEventListener('click', signOut);
+
         exportButton.addEventListener('click', exportDataToStyledPDF);
         exportXLSXButton.addEventListener('click', exportDataToXLSX);
     </script>
