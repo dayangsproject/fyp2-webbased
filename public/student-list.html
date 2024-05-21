@@ -40,7 +40,10 @@
                     <label for="intake">Intake:</label>
                     <input type="text" id="intake" class="form-control mb-2">
 
-                    <label>Intake/Mode</label>
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="text" id="phoneNumber" class="form-control mb-2">
+
+                    <label>Mode</label>
                     <select id="mode" class="form-control">
                         <option value=""> </option>
                         <option value="febFull">February Full Time</option>
@@ -95,7 +98,8 @@
         const db = getDatabase();
     
         // Function to add buttons to each row of the table
-        function addButtonsToTable(matricNo, studentName, admission, mode, status) {
+        function addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber) { // Add phoneNumber parameter
+            
             // Create the button element
             const viewButton = document.createElement("button");
             viewButton.textContent = "View/Edit";
@@ -106,6 +110,7 @@
                 document.getElementById("matricNo").value = matricNo;
                 document.getElementById("name").value = studentName;
                 document.getElementById("intake").value = admission;
+                document.getElementById("phoneNumber").value = phoneNumber; 
                 document.getElementById("mode").value = mode;
                 document.getElementById("status").value = status;
                 // Show the modal
@@ -119,8 +124,8 @@
             return td;
         }
 
-        /// Function to add a row to the table
-        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status) {
+        // Function to add a row to the table
+        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status, phoneNumber) { // Add phoneNumber parameter
             const tbody = document.getElementById('tbody1');
             const tr = document.createElement("tr");
 
@@ -143,43 +148,28 @@
 
             // Create and append the button cell
             const buttonTd = document.createElement("td");
-            const viewButton = document.createElement("button");
-            viewButton.textContent = "View/Edit";
-            viewButton.classList.add("btn", "btn-primary");
-            viewButton.addEventListener("click", function() {
-                // Populate the modal input fields with student details
-                document.getElementById("matricNo").value = matricNo;
-                document.getElementById("name").value = studentName;
-                document.getElementById("intake").value = admission;
-                document.getElementById("mode").value = mode;
-                document.getElementById("status").value = status;
-                // Show the modal
-                showModal();
-            });
-            buttonTd.appendChild(viewButton);
+            buttonTd.appendChild(addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber)); // Pass phoneNumber
             tr.appendChild(buttonTd);
 
             // Append the row to the table body
             tbody.appendChild(tr);
         }
     
-        // Function to retrieve data from the database and fill the table
         function getAllDataOnce() {
             const dbRef = ref(db);
-    
-            get(child(dbRef, "StudentInfo"))
-            .then((snapshot) => {
+
+            get(child(dbRef, "StudentInfo")).then((snapshot) => {
                 const students = [];
                 snapshot.forEach((childSnapshot) => {
                     const matricNo = childSnapshot.key; // Get the matric number from the key
                     const studentData = childSnapshot.val(); // Retrieve other data
-                    const { studentName, admission, mode, status } = studentData;
-                    students.push({ matricNo, studentName, admission, mode, status });
+                    const { studentName, admission, mode, status, phoneNumber } = studentData; 
+                    students.push({ matricNo, studentName, admission, mode, status, phoneNumber }); 
                 });
-    
+
                 // Add each student's data to the table
                 students.forEach((student, index) => {
-                    addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status);
+                    addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status, student.phoneNumber); 
                 });
             });
         }
@@ -220,6 +210,7 @@
             const matricNo = document.getElementById("matricNo").value;
             const newName = document.getElementById("name").value;
             const newIntake = document.getElementById("intake").value;
+            const newPhoneNumber = document.getElementById("phoneNumber").value; 
             const newMode = document.getElementById("mode").value;
             const newStatus = document.getElementById("status").value;
 
@@ -230,6 +221,7 @@
             update(studentRef, {
                 studentName: newName,
                 admission: newIntake,
+                phoneNumber: newPhoneNumber, 
                 mode: newMode,
                 status: newStatus
             })
