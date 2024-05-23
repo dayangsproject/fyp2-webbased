@@ -61,49 +61,50 @@
             </tr>
             <tr>
                 <td>Feb Intake Full</td>
-                <td><input type="checkbox" name="semester" value="febFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="febFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="febFull-sem3"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem1"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem2"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem3"></td>
             </tr>
             <tr>
                 <td>June Intake Full</td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem3"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem1"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem2"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem3"></td>
             </tr>
             <tr>
                 <td>Oct Intake Full</td>
-                <td><input type="checkbox" name="semester" value="octFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="octFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="octFull-sem3"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem1"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem2"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem3"></td>
             </tr>
             <tr>
                 <td>Feb Intake Part</td>
-                <td><input type="checkbox" name="semester" value="febPart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem6"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem1"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem2"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem3"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem4"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem5"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem6"></td>
             </tr>
             <tr>
                 <td>June Intake Part</td>
-                <td><input type="checkbox" name="semester" value="junePart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem6"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem1"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem2"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem3"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem4"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem5"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem6"></td>
             </tr>
             <tr>
                 <td>Oct Intake Part</td>
-                <td><input type="checkbox" name="semester" value="octPart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem6"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem1"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem2"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem3"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem4"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem5"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem6"></td>
             </tr>
+            
 
           </table>
         </div>
@@ -149,7 +150,7 @@
             let selectedSemesters = [];
     
             // Iterate through each intake type and check which semesters are selected
-            courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            courseSemester.querySelectorAll('input[type="radio"]:checked').forEach(input => {
                 selectedSemesters.push(input.value);
             });
     
