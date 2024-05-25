@@ -51,7 +51,7 @@
     <div id="courseSemester">
         <table>
             <tr>
-              <th></th> <!-- Empty header for spacing -->
+              <th></th>
               <th>Sem 1</th>
               <th>Sem 2</th>
               <th>Sem 3</th>
@@ -61,52 +61,60 @@
             </tr>
             <tr>
                 <td>Feb Intake Full</td>
-                <td><input type="checkbox" name="semester" value="febFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="febFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="febFull-sem3"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem1"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem2"></td>
+                <td><input type="radio" name="febFull" value="febFull-sem3"></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td>June Intake Full</td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="juneFull-sem3"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem1"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem2"></td>
+                <td><input type="radio" name="juneFull" value="juneFull-sem3"></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td>Oct Intake Full</td>
-                <td><input type="checkbox" name="semester" value="octFull-sem1"></td>
-                <td><input type="checkbox" name="semester" value="octFull-sem2"></td>
-                <td><input type="checkbox" name="semester" value="octFull-sem3"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem1"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem2"></td>
+                <td><input type="radio" name="octFull" value="octFull-sem3"></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td>Feb Intake Part</td>
-                <td><input type="checkbox" name="semester" value="febPart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="febPart-sem6"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem1"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem2"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem3"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem4"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem5"></td>
+                <td><input type="radio" name="febPart" value="febPart-sem6"></td>
             </tr>
             <tr>
                 <td>June Intake Part</td>
-                <td><input type="checkbox" name="semester" value="junePart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="junePart-sem6"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem1"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem2"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem3"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem4"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem5"></td>
+                <td><input type="radio" name="junePart" value="junePart-sem6"></td>
             </tr>
             <tr>
                 <td>Oct Intake Part</td>
-                <td><input type="checkbox" name="semester" value="octPart-sem1"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem2"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem3"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem4"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem5"></td>
-                <td><input type="checkbox" name="semester" value="octPart-sem6"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem1"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem2"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem3"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem4"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem5"></td>
+                <td><input type="radio" name="octPart" value="octPart-sem6"></td>
             </tr>
-
           </table>
-        </div>
+    </div>
 
     <br><br>
 
@@ -114,23 +122,22 @@
     <button id="UpdButton">Update</button>
     <button id="DelButton">Delete</button>
 
-
     <script type="module">
         // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import{getDatabase, ref, child, get, set, update, remove} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-        
+
         // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-          authDomain: "test-99503.firebaseapp.com",
-          databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "test-99503",
-          storageBucket: "test-99503.appspot.com",
-          messagingSenderId: "1017306171186",
-          appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
         };
-      
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
 
@@ -149,26 +156,17 @@
 
         // function to retrieve data
         function RetData(){
-            // Construct an array to store selected semesters
-            let selectedSemesters = [];
-
-            // Iterate through each intake type and check which semesters are selected
-            courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
-            selectedSemesters.push(input.value);
-            });
-
             const dbref = ref(db);
 
             get(child(dbref, 'CourseInfo/' + courseCodeInput.value)).then((snapshot) => {
                 if(snapshot.exists()){
-
                     courseCodeInput.value = snapshot.val().courseCode;
                     courseNameInput.value = snapshot.val().courseName;
                     creditHourInput.value = snapshot.val().creditHour;
                     courseStatus.value = snapshot.val().courseStatus;
-                    
+
                     // Set selected semesters
-                    courseSemester.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+                    courseSemester.querySelectorAll('input[type="radio"]').forEach((input) => {
                         if (snapshot.val().courseSemester.includes(input.value)) {
                             input.checked = true;
                         } else {
@@ -188,9 +186,8 @@
 
         // function to update course data
         function UpdateData(){ 
-            // Construct an array to store selected semesters
             let selectedSemesters = [];
-            courseSemester.querySelectorAll('input[type="checkbox"]:checked').forEach(option => {
+            courseSemester.querySelectorAll('input[type="radio"]:checked').forEach(option => {
                 selectedSemesters.push(option.value);
             });
 
@@ -198,7 +195,7 @@
                 courseName: courseNameInput.value,
                 creditHour: Number(creditHourInput.value),
                 courseStatus: courseStatus.value,
-                courseSemester: selectedSemesters // Update with selected semesters array
+                courseSemester: selectedSemesters
             })
             .then(()=>{
                 alert('Data updated successfully');
@@ -224,8 +221,6 @@
         RetButton.addEventListener('click', RetData);
         UpdButton.addEventListener('click', UpdateData);
         DelButton.addEventListener('click', DeleteData);
-
-      </script>
-
+    </script>
 </body>
 </html>
