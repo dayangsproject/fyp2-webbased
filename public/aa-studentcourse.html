@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Students by Course</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">View Students by Course</h1>
+        <div class="form-group">
+            <label for="courseSelect">Select Course:</label>
+            <select class="form-control" id="courseSelect"></select>
+        </div>
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Matric No</th>
+                    <th>Name</th>
+                    <th>Admission</th>
+                    <th>Mode</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Student Details</h5>
+                </div>
+                <div class="modal-body">
+                    <label for="matricNo">Matric No:</label>
+                    <input type="text" id="matricNo" class="form-control mb-2">
+
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" class="form-control mb-2">
+
+                    <label for="intake">Admission:</label>
+                    <input type="text" id="intake" class="form-control mb-2">
+
+                    <label>Mode</label>
+                    <select id="mode" class="form-control">
+                        <option value=""> </option>
+                        <option value="febFull">February Full Time</option>
+                        <option value="juneFull">June Full Time</option>
+                        <option value="octFull">October Full Time</option>
+                        <option value="febPart">February Part Time</option>
+                        <option value="junePart">June Part Time</option>
+                        <option value="octPart">October Part Time</option>
+                    </select>
+
+                    <label>Status</label>
+                    <select id="status" class="form-control">
+                        <option value=""> </option>
+                        <option value="Active">Active</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="On hiatus">On hiatus</option>
+                        <option value="Withdrawn">Withdrawn</option>
+                        <option value="Failed and quit">Failed and quit</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button id="saveChangesBtn" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Function to populate dropdown with available courses
+        function populateCourses() {
+            const courseSelect = document.getElementById('courseSelect');
+            const courseRef = ref(db, 'CourseInfo');
+
+            onValue(courseRef, (snapshot) => {
+                courseSelect.innerHTML = ''; // Clear previous options
+                snapshot.forEach((childSnapshot) => {
+                    const course = childSnapshot.val();
+                    const option = document.createElement('option');
+                    option.value = course.courseCode;
+                    option.textContent = `${course.courseCode} - ${course.courseName}`;
+                    courseSelect.appendChild(option);
+                });
+
+                // Automatically trigger the change event to load students for the first course
+                if (courseSelect.options.length > 0) {
+                    courseSelect.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // Function to retrieve and display students for selected course
+        function retrieveStudents() {
+            const selectedCourse = document.getElementById('courseSelect').value;
+            console.log('Selected Course:', selectedCourse); // Log the selected course
+
+            const studentTableBody = document.getElementById('studentTableBody');
+            studentTableBody.innerHTML = ''; // Clear previous student table
+
+            const studentRef = ref(db, 'StudentInfo');
+            get(studentRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    let studentFound = false;
+                    let studentNo = 1;
+                    snapshot.forEach((childSnapshot) => {
+                        const student = childSnapshot.val();
+                        if (student.courseStatus && student.courseStatus.courseTaken && student.courseStatus.courseTaken.includes(selectedCourse)) {
+                            addRowToTable(studentNo++, childSnapshot.key, student.studentName, student.admission, student.mode, student.status);
+                            studentFound = true;
+                        }
+                    });
+
+                    if (!studentFound) {
+                        const newRow = studentTableBody.insertRow();
+                        newRow.innerHTML = '<td colspan="7">No student enrolled in this course.</td>';
+                    }
+                } else {
+                    const newRow = studentTableBody.insertRow();
+                    newRow.innerHTML = '<td colspan="7">No student data available.</td>';
+                }
+            }).catch((error) => {
+                console.error('Error fetching student data:', error);
+                const newRow = studentTableBody.insertRow();
+                newRow.innerHTML = '<td colspan="7">Error fetching student data. Please try again later.</td>';
+            });
+        }
+
+        // Function to add a row to the table
+        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status) {
+            const studentTableBody = document.getElementById('studentTableBody');
+            const newRow = studentTableBody.insertRow();
+
+            // Add cells to the row
+            const cells = [
+                studentNo,
+                matricNo,
+                studentName,
+                admission,
+                mode,
+                status,
+                '' // Action column for buttons
+            ];
+
+            // Append cells to the row
+            cells.forEach(cell => {
+                const newCell = newRow.insertCell();
+                newCell.textContent = cell;
+            });
+
+            // Add buttons to the action cell
+            const actionCell = newRow.insertCell();
+            actionCell.innerHTML = '<button class="btn btn-primary">View/Edit</button>';
+
+            // Add event listener to the button for opening the modal
+            actionCell.querySelector('button').addEventListener('click', function() {
+                // Populate modal fields with student data
+                document.getElementById('matricNo').value = matricNo;
+                document.getElementById('name').value = studentName;
+                document.getElementById('intake').value = admission;
+                document.getElementById('mode').value = mode;
+                document.getElementById('status').value = status;
+
+                // Show the modal
+                $('#exampleModalCenter').modal('show');
+            });
+        }
+
+        // Populate courses dropdown on page load
+        populateCourses();
+
+        // Add event listener to course dropdown
+        document.getElementById('courseSelect').addEventListener('change', retrieveStudents);
+    </script>
+</body>
+</html>
