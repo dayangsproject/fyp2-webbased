@@ -33,42 +33,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Student Details</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Courses Taken</h5>
                 </div>
                 <div class="modal-body">
-                    <label for="matricNo">Matric No:</label>
-                    <input type="text" id="matricNo" class="form-control mb-2">
-
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" class="form-control mb-2">
-
-                    <label for="intake">Admission:</label>
-                    <input type="text" id="intake" class="form-control mb-2">
-
-                    <label>Mode</label>
-                    <select id="mode" class="form-control">
-                        <option value=""> </option>
-                        <option value="febFull">February Full Time</option>
-                        <option value="juneFull">June Full Time</option>
-                        <option value="octFull">October Full Time</option>
-                        <option value="febPart">February Part Time</option>
-                        <option value="junePart">June Part Time</option>
-                        <option value="octPart">October Part Time</option>
-                    </select>
-
-                    <label>Status</label>
-                    <select id="status" class="form-control">
-                        <option value=""> </option>
-                        <option value="Active">Active</option>
-                        <option value="Graduate">Graduate</option>
-                        <option value="On hiatus">On hiatus</option>
-                        <option value="Withdrawn">Withdrawn</option>
-                        <option value="Failed and quit">Failed and quit</option>
-                    </select>
+                    <!-- Display list of courses taken -->
+                    <ul id="coursesTakenList"></ul>
                 </div>
                 
                 <div class="modal-footer">
-                    <button id="saveChangesBtn" type="button" class="btn btn-primary">Save changes</button>
                     <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -88,7 +60,8 @@
             projectId: "test-99503",
             storageBucket: "test-99503.appspot.com",
             messagingSenderId: "1017306171186",
-            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
 
         // Initialize Firebase
@@ -120,8 +93,6 @@
         // Function to retrieve and display students for selected course
         function retrieveStudents() {
             const selectedCourse = document.getElementById('courseSelect').value;
-            console.log('Selected Course:', selectedCourse); // Log the selected course
-
             const studentTableBody = document.getElementById('studentTableBody');
             studentTableBody.innerHTML = ''; // Clear previous student table
 
@@ -178,15 +149,22 @@
             const actionCell = newRow.insertCell();
             actionCell.innerHTML = '<button class="btn btn-primary view-edit-btn">View/Edit</button>';
 
-
             // Add event listener to the button for opening the modal
             actionCell.querySelector('button').addEventListener('click', function() {
-                // Populate modal fields with student data
-                document.getElementById('matricNo').value = matricNo;
-                document.getElementById('name').value = studentName;
-                document.getElementById('intake').value = admission;
-                document.getElementById('mode').value = mode;
-                document.getElementById('status').value = status;
+                // Retrieve list of courses taken by the student
+                const coursesTakenList = document.getElementById('coursesTakenList');
+                coursesTakenList.innerHTML = ''; // Clear previous courses list
+
+                // Retrieve courses taken from the database
+                const studentRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
+                get(studentRef).then((snapshot) => {
+                    snapshot.forEach((courseSnapshot) => {
+                        const courseCode = courseSnapshot.val();
+                        const listItem = document.createElement('li');
+                        listItem.textContent = courseCode;
+                        coursesTakenList.appendChild(listItem);
+                    });
+                });
 
                 // Show the modal
                 $('#exampleModalCenter').modal('show');
@@ -199,5 +177,9 @@
         // Add event listener to course dropdown
         document.getElementById('courseSelect').addEventListener('change', retrieveStudents);
     </script>
+
+    <!-- Add jQuery and Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
