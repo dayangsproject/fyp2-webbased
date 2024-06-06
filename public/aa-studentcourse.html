@@ -22,7 +22,6 @@
                     <th>Admission</th>
                     <th>Mode</th>
                     <th>Status</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="studentTableBody"></tbody>
@@ -166,8 +165,7 @@
                 studentName,
                 admission,
                 mode,
-                status,
-                '' // Action column for buttons
+                status
             ];
 
             // Append cells to the row
@@ -178,7 +176,8 @@
 
             // Add buttons to the action cell
             const actionCell = newRow.insertCell();
-            actionCell.innerHTML = '<button class="btn btn-primary">View/Edit</button>';
+            actionCell.innerHTML = '<button class="btn btn-primary view-edit-btn">View/Edit</button>';
+
 
             // Add event listener to the button for opening the modal
             actionCell.querySelector('button').addEventListener('click', function() {
