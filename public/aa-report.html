@@ -1,239 +1,302 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- WORKING PDF DOWNLOADER -->
-    <!-- WORKING EXCEL DOWNLOADER -->
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/sidebar.css" />
-    <style>
-        .centered-buttons {
-            margin-top: 200px; 
-            text-align: center;
-        }
-    </style>    
+  <!-- Meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Boxicons CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="css/sidebar.css">
+  <!-- Custom CSS -->
+  <style>
+    .centered-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
-
 <body>
-    <!-- sidebar -->
-    <nav class="sidebar">
-        <div class="menu_content"> 
-        <ul class="menu_items">
-            
-            <i id="sidebarOpen"></i>
-
-            <li class="item no-click">
-            <a class="nav_link">
-                <span class="navlink_icon">
-                <i class='bx bx-menu' ></i>
-                </span>
-                <h3>Menu</h3>
-            </a>
-            </li>
-
-            <li class="item">
-                <a href="#" class="nav_link" id=" ">
-                    <span class="navlink_icon">
-                        <i class='bx bxs-dashboard'></i>
-                </span>
-                <span class="navlink">Dashboard</span>
-                </a>
-            </li>
-            
-            <div href="#" class="nav_link submenu_item">
-                <span class="navlink_icon">
-                <i class='bx bxs-user-circle'></i>
-                </span>
-                <span class="navlink">Profile</span>
-                <i class="bx bx-chevron-right arrow-left"></i>
-            </div>
-
-            <ul class="menu_items submenu">
-                <a href="aa-profile.html" class="nav_link sublink">Edit profile</a>
-                <a href="aa-password.html" class="nav_link sublink">Change password</a>
-            </ul>
-            </li>
-
-            <li class="item">
-            <div href="#" class="nav_link submenu_item">
-                <span class="navlink_icon">
-                <i class='bx bxs-food-menu'></i>
-                </span>
-                <span class="navlink">Course</span>
-                <i class="bx bx-chevron-right arrow-left"></i>
-            </div>
-
-            <ul class="menu_items submenu">
-                <a href="aa-viewcourse.html" class="nav_link sublink">View course list</a>
-                <a href="aa-addcourse.html" class="nav_link sublink">Add course</a>
-                <a href="aa-editcourse.html" class="nav_link sublink">Edit course</a>
-            </ul>
-            </li>
-
-            <li class="item">
-                <a href="aa-report.html" class="nav_link" id=" ">
-                    <span class="navlink_icon">
-                        <i class='bx bxs-report' ></i>
-                    </span>
-                    <span class="navlink">Report</span>
-                </a>
-            </li>
-
-
-            <li class="item">
-            <a href="#" class="nav_link" id="signOutButton">
-                <span class="navlink_icon">
-                <i class='bx bx-exit' ></i>
-                </span>
-                <span class="navlink">Log Out</span>
-            </a>
-            </li>
-            
-            <li class="item">
-            <a href="#" class="nav_link">
-                <span class="navlink_icon">
-                <i id="darkLight"></i>
-                </span>
-                <span class="navlink"> </span>
-            </a>
-            </li>
-
-        </ul>
-
-        <!-- Sidebar Open / Close -->
-        <div class="bottom_content">
-            <div class="bottom expand_sidebar">
-            <span> Expand</span>
-            <i class='bx bx-expand-horizontal'></i>
-            </div>
-            <div class="bottom collapse_sidebar">
-            <span> Collapse</span>
-            <i class='bx bx-collapse-horizontal' ></i>
-            </div>
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="menu_content">
+      <ul class="menu_items">
+        <i id="sidebarOpen"></i>
+        <li class="item no-click">
+          <a class="nav_link">
+            <span class="navlink_icon">
+              <i class='bx bx-menu'></i>
+            </span>
+            <h3>Menu</h3>
+          </a>
+        </li>
+        <li class="item">
+          <a href="#" class="nav_link">
+            <span class="navlink_icon">
+              <i class='bx bxs-dashboard'></i>
+            </span>
+            <span class="navlink">Dashboard</span>
+          </a>
+        </li>
+        <li class="item">
+          <div class="nav_link submenu_item">
+            <span class="navlink_icon">
+              <i class='bx bxs-user-circle'></i>
+            </span>
+            <span class="navlink">Profile</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+          <ul class="menu_items submenu">
+            <li><a href="aa-profile.html" class="nav_link sublink">Edit profile</a></li>
+            <li><a href="aa-password.html" class="nav_link sublink">Change password</a></li>
+          </ul>
+        </li>
+        <li class="item">
+          <div class="nav_link submenu_item">
+            <span class="navlink_icon">
+              <i class='bx bxs-spreadsheet'></i>
+            </span>
+            <span class="navlink">Student</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+          <ul class="menu_items submenu">
+            <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
+            <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+          </ul>
+        </li>
+        <li class="item">
+          <div class="nav_link submenu_item">
+            <span class="navlink_icon">
+              <i class='bx bxs-food-menu'></i>
+            </span>
+            <span class="navlink">Course</span>
+            <i class="bx bx-chevron-right arrow-left"></i>
+          </div>
+          <ul class="menu_items submenu">
+            <li><a href="aa-viewcourse.html" class="nav_link sublink">View course list</a></li>
+            <li><a href="aa-addcourse.html" class="nav_link sublink">Add course</a></li>
+            <li><a href="aa-editcourse.html" class="nav_link sublink">Edit course</a></li>
+          </ul>
+        </li>
+        <li class="item">
+          <a href="aa-report.html" class="nav_link">
+            <span class="navlink_icon">
+              <i class='bx bxs-report'></i>
+            </span>
+            <span class="navlink">Report</span>
+          </a>
+        </li>
+        <li class="item">
+          <a href="#" class="nav_link" id="signOutButton">
+            <span class="navlink_icon">
+              <i class='bx bx-exit'></i>
+            </span>
+            <span class="navlink">Log Out</span>
+          </a>
+        </li>
+        <li class="item">
+          <a href="#" class="nav_link">
+            <span class="navlink_icon">
+              <i id="darkLight"></i>
+            </span>
+            <span class="navlink"></span>
+          </a>
+        </li>
+      </ul>
+      <!-- Sidebar Open / Close -->
+      <div class="bottom_content">
+        <div class="bottom expand_sidebar">
+          <span>Expand</span>
+          <i class='bx bx-expand-horizontal'></i>
         </div>
+        <div class="bottom collapse_sidebar">
+          <span>Collapse</span>
+          <i class='bx bx-collapse-horizontal'></i>
         </div>
-    </nav>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-3">
+    <input type="text" id="searchInput" class="form-control mb-2" placeholder="Search...">
+    <table class="table table-light">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Matric No</th>
+          <th>Name</th>
+          <th>Intake</th>
+          <th>Mode</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody1"></tbody>
+    </table>
+  </div>
+  <div style="text-align: center;">
+    <div class="centered-buttons">
+      <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
+      <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
+    </div>
+  </div>
+  <!-- Bootstrap JS Bundle (requires jQuery) -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.19/jspdf.plugin.autotable.min.js" async></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getDatabase, ref, get, set, child, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
-    <div style="text-align: center;">
-        <div class="centered-buttons">
-            <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
-            <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
-        </div>
-    </div>  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+      authDomain: "test-99503.firebaseapp.com",
+      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "test-99503",
+      storageBucket: "test-99503.appspot.com",
+      messagingSenderId: "1017306171186",
+      appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+      databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.19/jspdf.plugin.autotable.min.js" async></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            // Firebase config details
-            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-            authDomain: "test-99503.firebaseapp.com",
-            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "test-99503",
-            storageBucket: "test-99503.appspot.com",
-            messagingSenderId: "1017306171186",
-            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-
-    // initialize Firebase
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-
-    // get references to Firebase database
     const db = getDatabase();
 
-        let exportButton = document.getElementById('exportButton');
-        let exportXLSXButton = document.getElementById('exportXLSXButton');
+    let exportButton = document.getElementById('exportButton');
+    let exportXLSXButton = document.getElementById('exportXLSXButton');
 
-        // Function to retrieve data from Firebase and export to styled PDF
-        async function exportDataToStyledPDF() {
-            const dbRef = ref(db, 'StudentInfo');
-            const snapshot = await get(dbRef);
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                const pdf = new jsPDF();
+    // Function to add buttons to each row of the table
+    function addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber) {
+      return "";
+    }
 
-                // Set title
-                pdf.setFontSize(18);
-                pdf.setFont("helvetica", "bold");
-                pdf.text('Student Information', 10, 10);
+    // Function to add a row to the table
+    function addRowToTable(studentNo, matricNo, studentName, admission, mode, status, phoneNumber) {
+      const tbody = document.getElementById('tbody1');
+      const tr = document.createElement("tr");
+      const cells = [studentNo, matricNo, studentName, admission, mode, status];
+      cells.forEach(cell => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    }
 
-                // Convert student data to array of objects
-                const dataArray = Object.keys(data).map(key => {
-                    return {
-                        Admission: data[key].admission,
-                        'Course Status': data[key].courseStatus,
-                        Email: data[key].email,
-                        Mode: data[key].mode,
-                        Status: data[key].status,
-                        'Student Name': data[key].studentName
-                    };
-                });
+    function getAllDataOnce() {
+      const dbRef = ref(db);
+      get(child(dbRef, "StudentInfo")).then((snapshot) => {
+        const students = [];
+        snapshot.forEach((childSnapshot) => {
+          const matricNo = childSnapshot.key;
+          const studentData = childSnapshot.val();
+          const { studentName, admission, mode, status, phoneNumber } = studentData;
+          students.push({ matricNo, studentName, admission, mode, status, phoneNumber });
+        });
+        students.forEach((student, index) => {
+          addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status, student.phoneNumber);
+        });
+      });
+    }
 
-                // Generate table
-                pdf.autoTable({
-                    head: [{ Admission: 'Admission', 'Course Status': 'Course Status', Email: 'Email', Mode: 'Mode', Status: 'Status', 'Student Name': 'Student Name' }],
-                    body: dataArray,
-                    startY: 20
-                });
-
-                // Save the PDF
-                pdf.save('student_info.pdf');
-            } else {
-                alert('No data found');
-            }
+    function handleSearch() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll('#tbody1 tr');
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let found = false;
+        cells.forEach(cell => {
+          if (cell.textContent.toLowerCase().includes(searchQuery)) {
+            found = true;
+          }
+        });
+        if (found) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
         }
+      });
+    }
 
+    // Function to handle export to styled PDF
+    async function exportDataToStyledPDF() {
+      const dbRef = ref(db, 'StudentInfo');
+      const snapshot = await get(dbRef);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const pdf = new jsPDF();
+        pdf.setFontSize(18);
+        pdf.setFont("helvetica", "bold");
+        pdf.text('Student Information', 10, 10);
+        const dataArray = Object.keys(data).map(key => {
+          return {
+            Admission: data[key].admission,
+            'Course Status': data[key].courseStatus,
+            Email: data[key].email,
+            Mode: data[key].mode,
+            Status: data[key].status,
+            'Student Name': data[key].studentName
+          };
+        });
+        pdf.autoTable({
+          head: [
+            { Admission: 'Admission', 'Course Status': 'Course Status', Email: 'Email', Mode: 'Mode', Status: 'Status', 'Student Name': 'Student Name' }
+          ],
+          body: dataArray,
+          startY: 20
+        });
+        pdf.save('student_info.pdf');
+      } else {
+        alert('No data found');
+      }
+    }
 
-        // Function to retrieve data from Firebase and export to XLSX
-        async function exportDataToXLSX() {
-            const dbRef = ref(db, 'StudentInfo');
-            const snapshot = await get(dbRef);
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                let dataArray = [];
-                // Convert data to an array of objects if it's not already in that format
-                if (typeof data === 'object' && data !== null) {
-                    Object.keys(data).forEach(key => {
-                        dataArray.push(data[key]);
-                    });
-                }
-                const worksheet = XLSX.utils.json_to_sheet(dataArray);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-                XLSX.writeFile(workbook, 'firebase_data.xlsx');
-            } else {
-                alert('No data found');
-            }
+    // Function to handle export to XLSX
+    async function exportDataToXLSX() {
+      const dbRef = ref(db, 'StudentInfo');
+      const snapshot = await get(dbRef);
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        let dataArray = [];
+        if (typeof data === 'object' && data !== null) {
+          Object.keys(data).forEach(key => {
+            dataArray.push(data[key]);
+          });
         }
+        const worksheet = XLSX.utils.json_to_sheet(dataArray);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        XLSX.writeFile(workbook, 'firebase_data.xlsx');
+      } else {
+        alert('No data found');
+      }
+    }
 
-        // Function to sign out user
-        function signOut() {
-            sessionStorage.removeItem("user-creds");
-            sessionStorage.removeItem("user-info");
-            window.location.href = 'index.html';
-        }
+    // Function to sign out user
+    function signOut() {
+      sessionStorage.removeItem("user-creds");
+      sessionStorage.removeItem("user-info");
+      window.location.href = 'index.html';
+    }
 
-        // Event listener to sign out user
-        const signOutButton = document.getElementById('signOutButton');
-        signOutButton.addEventListener('click', signOut);
+    // Attach event listener to search input
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
 
-        exportButton.addEventListener('click', exportDataToStyledPDF);
-        exportXLSXButton.addEventListener('click', exportDataToXLSX);
-    </script>
+    // Call the function to fill the table when the window loads
+    window.onload = getAllDataOnce;
 
-    <script src="js/sidebar.js"></script>
+    // Event listener to sign out user
+    const signOutButton = document.getElementById('signOutButton');
+    signOutButton.addEventListener('click', signOut);
+    exportButton.addEventListener('click', exportDataToStyledPDF);
+    exportXLSXButton.addEventListener('click', exportDataToXLSX);
+  </script>
+  <script src="js/sidebar.js"></script>
 </body>
 </html>

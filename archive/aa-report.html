@@ -1,15 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrieve Courses by Semester</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    
+    <!-- WORKING PDF DOWNLOADER -->
+    <!-- WORKING EXCEL DOWNLOADER -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
+    <style>
+        .centered-buttons {
+            margin-top: 200px; 
+            text-align: center;
+        }
+    </style>    
 </head>
+
 <body>
     <!-- Sidebar -->
     <nav class="sidebar">
@@ -111,112 +119,109 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1 class="mb-4">View course by semester</h1><br>
-
-        <div class="form-group">
-            <label for="program">Select Program:</label>
-            <select id="program" class="form-control">
-                <option value="febFull">February Full Time</option>
-                <option value="juneFull">June Full Time</option>
-                <option value="octFull">October Full Time</option>
-                <option value="febPart">February Part Time</option>
-                <option value="junePart">June Part Time</option>
-                <option value="octPart">October Part Time</option>
-            </select>
-            <button class="btn btn-primary mt-2">Home</button>
+    <div style="text-align: center;">
+        <div class="centered-buttons">
+            <button id="exportButton" class="btn btn-primary">Export Data to PDF</button>
+            <button id="exportXLSXButton" class="btn btn-primary">Export Data to XLSX</button>
         </div>
-        <div id="courseList" class="mt-4"></div>
-    </div>    
+    </div>  
 
-    <!-- Your Firebase and JavaScript code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.19/jspdf.plugin.autotable.min.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.0/xlsx.full.min.js"></script>
+
     <script type="module">
-        // Import firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 
         // Firebase configuration
         const firebaseConfig = {
+            // Firebase config details
             apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
             authDomain: "test-99503.firebaseapp.com",
             databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "test-99503",
             storageBucket: "test-99503.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
             databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+    // initialize Firebase
+    const app = initializeApp(firebaseConfig);
 
-        // Get reference to Firebase database
-        const db = getDatabase();
+    // get references to Firebase database
+    const db = getDatabase();
 
-        // Function to retrieve courses by semester
-        function retrieveCoursesByProgram(selectedProgram) {
-            const dbRef = ref(db, 'CourseInfo');
+        let exportButton = document.getElementById('exportButton');
+        let exportXLSXButton = document.getElementById('exportXLSXButton');
 
-            get(dbRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const courseList = document.getElementById('courseList');
-                    courseList.innerHTML = ''; // Clear previous courses
+        // Function to retrieve data from Firebase and export to styled PDF
+        async function exportDataToStyledPDF() {
+            const dbRef = ref(db, 'StudentInfo');
+            const snapshot = await get(dbRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const pdf = new jsPDF();
 
-                    const numSemesters = selectedProgram.includes('Part') ? 6 : 3;
+                // Set title
+                pdf.setFontSize(18);
+                pdf.setFont("helvetica", "bold");
+                pdf.text('Student Information', 10, 10);
 
-                    for (let i = 1; i <= numSemesters; i++) {
-                        const semester = selectedProgram + '-sem' + i;
-                        const semesterHeader = document.createElement('h2');
-                        semesterHeader.textContent = semester;
-                        courseList.appendChild(semesterHeader);
+                // Convert student data to array of objects
+                const dataArray = Object.keys(data).map(key => {
+                    return {
+                        Admission: data[key].admission,
+                        'Course Status': data[key].courseStatus,
+                        Email: data[key].email,
+                        Mode: data[key].mode,
+                        Status: data[key].status,
+                        'Student Name': data[key].studentName
+                    };
+                });
 
-                        // Add line separator
-                        const divider = document.createElement('div');
-                        divider.classList.add('semesterDivider');
-                        courseList.appendChild(divider);
+                // Generate table
+                pdf.autoTable({
+                    head: [{ Admission: 'Admission', 'Course Status': 'Course Status', Email: 'Email', Mode: 'Mode', Status: 'Status', 'Student Name': 'Student Name' }],
+                    body: dataArray,
+                    startY: 20
+                });
 
-                        snapshot.forEach((childSnapshot) => {
-                            const course = childSnapshot.val();
+                // Save the PDF
+                pdf.save('student_info.pdf');
+            } else {
+                alert('No data found');
+            }
+        }
 
-                            // Check if the course semester includes the selected semester
-                            if (course.courseSemester.includes(semester)) {
-                                const courseDiv = document.createElement('div');
-                                courseDiv.classList.add('course');
 
-                                const courseCodeHeader = document.createElement('h3');
-                                courseCodeHeader.textContent = "Course Code: " + course.courseCode;
-                                courseDiv.appendChild(courseCodeHeader);
-
-                                const courseNameParagraph = document.createElement('p');
-                                courseNameParagraph.textContent = "Course Name: " + course.courseName;
-                                courseDiv.appendChild(courseNameParagraph);
-
-                                const creditHourParagraph = document.createElement('p');
-                                creditHourParagraph.textContent = "Credit Hours: " + course.creditHour;
-                                courseDiv.appendChild(creditHourParagraph);
-
-                                const courseStatusParagraph = document.createElement('p');
-                                courseStatusParagraph.textContent = "Status: " + course.courseStatus;
-                                courseDiv.appendChild(courseStatusParagraph);
-
-                                courseList.appendChild(courseDiv);
-                            }
-                        });
-
-                        // Add line separator
-                        courseList.appendChild(divider.cloneNode(true));
-                    } 
-                } else {
-                    const courseList = document.getElementById('courseList');
-                    courseList.textContent = "No courses found.";
+        // Function to retrieve data from Firebase and export to XLSX
+        async function exportDataToXLSX() {
+            const dbRef = ref(db, 'StudentInfo');
+            const snapshot = await get(dbRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                let dataArray = [];
+                // Convert data to an array of objects if it's not already in that format
+                if (typeof data === 'object' && data !== null) {
+                    Object.keys(data).forEach(key => {
+                        dataArray.push(data[key]);
+                    });
                 }
-            }).catch((error) => {
-                console.error("Error retrieving courses:", error);
-            });
+                const worksheet = XLSX.utils.json_to_sheet(dataArray);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+                XLSX.writeFile(workbook, 'firebase_data.xlsx');
+            } else {
+                alert('No data found');
+            }
         }
 
         // Function to sign out user
-            function signOut() {
+        function signOut() {
             sessionStorage.removeItem("user-creds");
             sessionStorage.removeItem("user-info");
             window.location.href = 'index.html';
@@ -226,15 +231,10 @@
         const signOutButton = document.getElementById('signOutButton');
         signOutButton.addEventListener('click', signOut);
 
-        // Event listener for program selection
-        document.getElementById('program').addEventListener('change', (event) => {
-            retrieveCoursesByProgram(event.target.value);
-        });
-
-        // Initial retrieval of courses when the page loads
-        const initialProgram = document.getElementById('program').value;
-        retrieveCoursesByProgram(initialProgram);
+        exportButton.addEventListener('click', exportDataToStyledPDF);
+        exportXLSXButton.addEventListener('click', exportDataToXLSX);
     </script>
+
     <script src="js/sidebar.js"></script>
 </body>
 </html>

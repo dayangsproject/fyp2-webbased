@@ -35,6 +35,7 @@
                 </a>
             </li>
             
+            <li class="item">
             <div href="#" class="nav_link submenu_item">
                 <span class="navlink_icon">
                 <i class='bx bxs-user-circle'></i>
@@ -46,6 +47,21 @@
             <ul class="menu_items submenu">
                 <a href="aa-profile.html" class="nav_link sublink">Edit profile</a>
                 <a href="aa-password.html" class="nav_link sublink">Change password</a>
+            </ul>
+            </li>
+
+            <li class="item">
+            <div href="#" class="nav_link submenu_item">
+                <span class="navlink_icon">
+                    <i class='bx bxs-spreadsheet'></i>
+                </span>
+                <span class="navlink">Student</span>
+                <i class="bx bx-chevron-right arrow-left"></i>
+            </div>
+
+            <ul class="menu_items submenu">
+                <a href="aa-student-list.html" class="nav_link sublink">Student list</a>
+                <a href="aa-studentcourse.html" class="nav_link sublink">Student course</a>
             </ul>
             </li>
 
@@ -110,29 +126,30 @@
     </nav>
 
     <!-- Main content -->
-    <div id="mainContent">
-        <label>Name: </label>
-        <span id="displayName"></span>
-        <br><br>
-
-        <label>Email: </label>
-        <span id="displayEmail"></span>
-        <br><br>
-
-        <label>Phone Number: </label>
-        <input type="text" id="phoneNumberInput" />
-        <br><br>
-
-        <label>Role: </label>
-        <input type="text" id="roleInput" />
-        <br><br>
-
-        <label>Location: </label>
-        <input type="text" id="locationInput" />
-        <br><br>
-
-        <button id="saveButton">Save</button> 
-        <button id="homeButton">Home</button>
+    <div id="mainContent" class="container mt-5">
+        <h2 class="form-title mb-3">Edit Profile</h2>
+            <div class="row">
+            <div class="col-md-6">
+                <label for="displayName" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="displayName" disabled>
+                <br>
+                <label for="displayEmail" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="displayEmail" disabled>
+                <br>
+                <label for="phoneNumberInput" class="form-label">Phone Number:</label>
+                <input type="text" class="form-control" id="phoneNumberInput" />
+                <br>
+                <label for="roleInput" class="form-label">Role:</label>
+                <input type="text" class="form-control" id="roleInput" />
+                <br>
+                <label for="locationInput" class="form-label">Location:</label>
+                <input type="text" class="form-control" id="locationInput" />
+            
+            <br>
+            <button type="submit" class="btn btn-primary" id="saveButton">Save</button> 
+            <button type="button" class="btn btn-secondary" id="profileButton">Back</button>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="js/sidebar.js"></script>
@@ -228,6 +245,8 @@
                     phoneNumberInput.value = adminData.phoneNumber || ''; // Update phoneNumberInput
                     locationInput.value = adminData.location || ''; // Update locationInput
                     roleInput.value = adminData.role || ''; // Update roleInput
+                    document.getElementById('displayName').value = adminData.name || ''; // Update displayName input
+                    document.getElementById('displayEmail').value = adminData.email || ''; // Update displayEmail input
                 } else {
                     alert('Please fill with your information');
                 }
@@ -240,9 +259,8 @@
         }
     }
 
-
-        // Function to sign out user
-        function signOut() {
+    // Function to sign out user
+    function signOut() {
             sessionStorage.removeItem("user-creds");
             sessionStorage.removeItem("user-info");
             window.location.href = 'index.html';
@@ -252,17 +270,18 @@
         const signOutButton = document.getElementById('signOutButton');
         signOutButton.addEventListener('click', signOut);
 
+        // Function to navigate to admin-edit.html
+        function goToProfilePage() {
+                window.location.href = 'aa-profile.html';
+        }
+
         // Event listener for the Save button
         saveButton.addEventListener('click', saveData);
 
-        // Function to navigate to home page
-        function goToHome() {
-            window.location.href = 'aa-home.html';
-        }
+        // Event listener for the edit profile button
+        const profileButton = document.getElementById('profileButton');
+        profileButton.addEventListener('click', goToProfilePage);
 
-        // Event listener for the Home button
-        let homeButton = document.getElementById('homeButton');
-        homeButton.addEventListener('click', goToHome);
     </script>
 </body>
 </html>

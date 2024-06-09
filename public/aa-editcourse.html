@@ -3,124 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course CRUD function</title>
-    <style>
-        label{
-            display: inline-block;
-            font-size: 16px;
-            font-family: Arial, Helvetica, sans-serif;
-            width: 110px;
-        }
-
-        input, select{
-            width: 250px;
-            height: 30px;
-            font-size: 16px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        button {
-            height: 30px;
-            width: 72px;
-        }
-
-    </style>
+    <title>Update course</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/sidebar.css" />
 </head>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+            <ul class="menu_items">
+                <i id="sidebarOpen"></i>
+                <li class="item no-click">
+                    <a class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bx-menu'></i>
+                        </span>
+                        <h3>Menu</h3>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-dashboard'></i>
+                        </span>
+                        <span class="navlink">Dashboard</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-user-circle'></i>
+                        </span>
+                        <span class="navlink">Profile</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-profile.html" class="nav_link sublink">Edit profile</a></li>
+                        <li><a href="aa-password.html" class="nav_link sublink">Change password</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-spreadsheet'></i>
+                        </span>
+                        <span class="navlink">Student</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
+                        <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-food-menu'></i>
+                        </span>
+                        <span class="navlink">Course</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-viewcourse.html" class="nav_link sublink">View course list</a></li>
+                        <li><a href="aa-addcourse.html" class="nav_link sublink">Add course</a></li>
+                        <li><a href="aa-editcourse.html" class="nav_link sublink">Edit course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="aa-report.html" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-report'></i>
+                        </span>
+                        <span class="navlink">Report</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link" id="signOutButton">
+                        <span class="navlink_icon">
+                            <i class='bx bx-exit'></i>
+                        </span>
+                        <span class="navlink">Log Out</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i id="darkLight"></i>
+                        </span>
+                        <span class="navlink"></span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Sidebar Open / Close -->
+            <div class="bottom_content">
+                <div class="bottom expand_sidebar">
+                    <span> Expand</span>
+                    <i class='bx bx-expand-horizontal'></i>
+                </div>
+                <div class="bottom collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class='bx bx-collapse-horizontal'></i>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<body>
-    <label>Code</label>
-    <input type="text" id="courseCodeInput">     <button id="RetButton">Retrieve</button>
-    <br><br>
+    <body>
+        <div class="container mt-5">
+            <h1 class="mb-4">Update course details</h1>
 
-    <label>Course Name</label>
-    <input type="text" id="courseNameInput">
-    <br><br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="courseCodeInput" class="form-label">Code</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="courseCodeInput">
+                        <button class="btn btn-outline-secondary" type="button" id="RetButton">Retrieve</button>
+                    </div>
+    
+                    <label for="courseNameInput" class="form-label">Course Name</label>
+                    <input type="text" class="form-control mb-3" id="courseNameInput">
+    
+                    <label for="creditHourInput" class="form-label">Course Credit Hours</label>
+                    <input type="number" class="form-control mb-3" id="creditHourInput">
+    
+                    <label for="courseStatus" class="form-label">Status</label>
+                    <select class="form-select mb-3" id="courseStatus">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Not active</option>
+                    </select>
+    
+                    <label for="courseSemester" class="form-label">Course Semester</label>
+                    <div id="courseSemester">
+                        <table>
+                            <tr>
+                              <th></th>
+                              <th>Sem 1</th>
+                              <th>Sem 2</th>
+                              <th>Sem 3</th>
+                              <th>Sem 4</th>
+                              <th>Sem 5</th>
+                              <th>Sem 6</th>
+                            </tr>
+                            <tr>
+                                <td>Feb Intake Full</td>
+                                <td><input type="radio" name="febFull" value="febFull-sem1"></td>
+                                <td><input type="radio" name="febFull" value="febFull-sem2"></td>
+                                <td><input type="radio" name="febFull" value="febFull-sem3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>June Intake Full</td>
+                                <td><input type="radio" name="juneFull" value="juneFull-sem1"></td>
+                                <td><input type="radio" name="juneFull" value="juneFull-sem2"></td>
+                                <td><input type="radio" name="juneFull" value="juneFull-sem3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Oct Intake Full</td>
+                                <td><input type="radio" name="octFull" value="octFull-sem1"></td>
+                                <td><input type="radio" name="octFull" value="octFull-sem2"></td>
+                                <td><input type="radio" name="octFull" value="octFull-sem3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Feb Intake Part</td>
+                                <td><input type="radio" name="febPart" value="febPart-sem1"></td>
+                                <td><input type="radio" name="febPart" value="febPart-sem2"></td>
+                                <td><input type="radio" name="febPart" value="febPart-sem3"></td>
+                                <td><input type="radio" name="febPart" value="febPart-sem4"></td>
+                                <td><input type="radio" name="febPart" value="febPart-sem5"></td>
+                                <td><input type="radio" name="febPart" value="febPart-sem6"></td>
+                            </tr>
+                            <tr>
+                                <td>June Intake Part</td>
+                                <td><input type="radio" name="junePart" value="junePart-sem1"></td>
+                                <td><input type="radio" name="junePart" value="junePart-sem2"></td>
+                                <td><input type="radio" name="junePart" value="junePart-sem3"></td>
+                                <td><input type="radio" name="junePart" value="junePart-sem4"></td>
+                                <td><input type="radio" name="junePart" value="junePart-sem5"></td>
+                                <td><input type="radio" name="junePart" value="junePart-sem6"></td>
+                            </tr>
+                            <tr>
+                                <td>Oct Intake Part</td>
+                                <td><input type="radio" name="octPart" value="octPart-sem1"></td>
+                                <td><input type="radio" name="octPart" value="octPart-sem2"></td>
+                                <td><input type="radio" name="octPart" value="octPart-sem3"></td>
+                                <td><input type="radio" name="octPart" value="octPart-sem4"></td>
+                                <td><input type="radio" name="octPart" value="octPart-sem5"></td>
+                                <td><input type="radio" name="octPart" value="octPart-sem6"></td>
+                            </tr>
+                          </table>
+                    </div>
+                </div>
+            </div>
+    
+            <br><br>
 
-    <label>Course Credit Hours</label>
-    <input type="number" id="creditHourInput">
-    <br><br>
-
-    <label>Status</label>
-    <select id="courseStatus">
-        <option value="Active">Active</option>
-        <option value="Inactive">Not active</option>
-    </select>
-    <br><br>
-
-    <label for="courseSemester">Course Semester</label>
-    <div id="courseSemester">
-        <table>
-            <tr>
-              <th></th>
-              <th>Sem 1</th>
-              <th>Sem 2</th>
-              <th>Sem 3</th>
-              <th>Sem 4</th>
-              <th>Sem 5</th>
-              <th>Sem 6</th>
-            </tr>
-            <tr>
-                <td>Feb Intake Full</td>
-                <td><input type="radio" name="febFull" value="febFull-sem1"></td>
-                <td><input type="radio" name="febFull" value="febFull-sem2"></td>
-                <td><input type="radio" name="febFull" value="febFull-sem3"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>June Intake Full</td>
-                <td><input type="radio" name="juneFull" value="juneFull-sem1"></td>
-                <td><input type="radio" name="juneFull" value="juneFull-sem2"></td>
-                <td><input type="radio" name="juneFull" value="juneFull-sem3"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Oct Intake Full</td>
-                <td><input type="radio" name="octFull" value="octFull-sem1"></td>
-                <td><input type="radio" name="octFull" value="octFull-sem2"></td>
-                <td><input type="radio" name="octFull" value="octFull-sem3"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Feb Intake Part</td>
-                <td><input type="radio" name="febPart" value="febPart-sem1"></td>
-                <td><input type="radio" name="febPart" value="febPart-sem2"></td>
-                <td><input type="radio" name="febPart" value="febPart-sem3"></td>
-                <td><input type="radio" name="febPart" value="febPart-sem4"></td>
-                <td><input type="radio" name="febPart" value="febPart-sem5"></td>
-                <td><input type="radio" name="febPart" value="febPart-sem6"></td>
-            </tr>
-            <tr>
-                <td>June Intake Part</td>
-                <td><input type="radio" name="junePart" value="junePart-sem1"></td>
-                <td><input type="radio" name="junePart" value="junePart-sem2"></td>
-                <td><input type="radio" name="junePart" value="junePart-sem3"></td>
-                <td><input type="radio" name="junePart" value="junePart-sem4"></td>
-                <td><input type="radio" name="junePart" value="junePart-sem5"></td>
-                <td><input type="radio" name="junePart" value="junePart-sem6"></td>
-            </tr>
-            <tr>
-                <td>Oct Intake Part</td>
-                <td><input type="radio" name="octPart" value="octPart-sem1"></td>
-                <td><input type="radio" name="octPart" value="octPart-sem2"></td>
-                <td><input type="radio" name="octPart" value="octPart-sem3"></td>
-                <td><input type="radio" name="octPart" value="octPart-sem4"></td>
-                <td><input type="radio" name="octPart" value="octPart-sem5"></td>
-                <td><input type="radio" name="octPart" value="octPart-sem6"></td>
-            </tr>
-          </table>
-    </div>
-
-    <br><br>
-
-    <button onclick="window.location.href='aa-home.html'">Home</button>
-    <button id="UpdButton">Update</button>
-    <button id="DelButton">Delete</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-primary me-2" id="UpdButton">Update</button>
+                    <button class="btn btn-danger" id="DelButton">Delete</button>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Firebase App (necessary for Firebase) -->
+        <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+        <!-- Firebase Database (necessary for Firebase Realtime Database) -->
+        <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"></script>
 
     <script type="module">
         // Import firebase modules
@@ -221,6 +319,18 @@
         RetButton.addEventListener('click', RetData);
         UpdButton.addEventListener('click', UpdateData);
         DelButton.addEventListener('click', DeleteData);
+
+        // Function to sign out user
+        function signOut() {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'index.html';
+        }
+
+        // Event listener to sign out user
+        const signOutButton = document.getElementById('signOutButton');
+        signOutButton.addEventListener('click', signOut);
     </script>
+    <script src="js/sidebar.js"></script>
 </body>
 </html>
