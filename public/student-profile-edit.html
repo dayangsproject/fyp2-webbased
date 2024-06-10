@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Boxicons CSS -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/styles-2.css" />
 </head>
@@ -89,59 +92,57 @@
     </nav>
 
     <!-- Main content -->
-    <div id="mainContent">
-        <label>Name: </label>
-        <span id="displayName"></span>
-        <br><br>
-
-        <label>Email: </label>
-        <span id="displayEmail"></span>
-        <br><br>
-
-        <label>Matric number</label>
-        <input type="number" id="matricNoInput">
-        <br><br>
-
-        <label>Phone Number:</label>
-        <input type="number" id="phoneNumberInput">
-        <br><br>
-
-        <label>Status</label>
-        <select id="statusInput">
-            <option value=" "> </option>
-            <option value="Active">Active</option>
-            <option value="Graduate">Graduate</option>
-            <option value="On hiatus">On hiatus</option>
-            <option value="Withdrawn">Withdrawn</option>
-            <option value="Failed and quit">Failed and quit</option>
-        </select>
-        <br><br>
-
-        <label>Year of admission</label>
-        <select id="admissionInput">
-            <option value=" "> </option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-        </select>
-        <br><br>
-
-        <label>Intake/Mode</label>
-        <select id="modeInput">
-            <option value=" "> </option>
-            <option value="febFull">February Full Time</option>
-            <option value="juneFull">June Full Time</option>
-            <option value="octFull">October Full Time</option>
-            <option value="febPart">February Part Time</option>
-            <option value="junePart">June Part Time</option>
-            <option value="octPart">October Part Time</option>
-        </select>
-        <br><br>
-
-        <button id="AddButton">Save</button> 
-        <button id="homeButton">Home</button>
+    <div id="mainContent" class="container mt-5">
+        <h2 class="form-title mb-3">Edit Profile</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="displayName" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="displayName" disabled>
+                <br>
+                <label for="displayEmail" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="displayEmail" disabled>
+                <br>
+                <label for="matricNoInput" class="form-label">Matric number:</label>
+                <input type="number" class="form-control" id="matricNoInput">
+                <br>
+                <label for="phoneNumberInput" class="form-label">Phone Number:</label>
+                <input type="number" class="form-control" id="phoneNumberInput">
+                <br>
+                <label for="statusInput" class="form-label">Status:</label>
+                <select id="statusInput" class="form-select">
+                    <option value=" "> </option>
+                    <option value="Active">Active</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="On hiatus">On hiatus</option>
+                    <option value="Withdrawn">Withdrawn</option>
+                    <option value="Failed and quit">Failed and quit</option>
+                </select>
+                <br>
+                <label for="admissionInput" class="form-label">Year of admission:</label>
+                <select id="admissionInput" class="form-select">
+                    <option value=" "> </option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+                <br>
+                <label for="modeInput" class="form-label">Intake/Mode:</label>
+                <select id="modeInput" class="form-select">
+                    <option value=" "> </option>
+                    <option value="febFull">February Full Time</option>
+                    <option value="juneFull">June Full Time</option>
+                    <option value="octFull">October Full Time</option>
+                    <option value="febPart">February Part Time</option>
+                    <option value="junePart">June Part Time</option>
+                    <option value="octPart">October Part Time</option>
+                </select>
+                <br>
+                <button id="AddButton" class="btn btn-primary">Save</button> 
+                <button id="homeButton" class="btn btn-secondary">Home</button>
+            </div>
+        </div>
     </div>
 
 
@@ -303,10 +304,14 @@
                                 matricNoInput.value = matricNo;
                                 // Add this line to retrieve and display the phone number
                                 const studentPhoneNumber = studentData.phoneNumber;
-                                phoneNumberInput.textContent = studentPhoneNumber;
+                                phoneNumberInput.value = studentPhoneNumber;
                                 statusInput.value = studentData.status;
                                 admissionInput.value = studentData.admission;
                                 modeInput.value = studentData.mode;
+
+                                document.getElementById('displayName').value = studentData.studentName || '';
+                                document.getElementById('displayEmail').value = studentData.email || '';
+
                                 // Exit the loop since we found the matching email
                                 return;
                             }

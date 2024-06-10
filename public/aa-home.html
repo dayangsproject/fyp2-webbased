@@ -1,21 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
-    <style>
-        #mainContent {
-            padding-left: 300px; 
-            padding-top: 50px;
-        }
-    </style>    
+    <link rel="stylesheet" href="css/styles-2.css" /> 
 </head>
-
 <body>
 
     <!-- sidebar -->
@@ -134,75 +127,68 @@
     </nav>
 
     <div id="mainContent">
-        <h2 id="msg"></h2>
-        <h2 id="greet"></h2>
+        <h3 id="msg"></h3>
+        <h3 id="greet"></h3>
     </div>
 
-<script>
-
-    // function to retrieve the name of the logged-in user
-    // sign out function
-    let userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
-    let userInfo = JSON.parse(sessionStorage.getItem("user-info"));
-
-    let MsgHead = document.getElementById('msg');
-    let GreetHead = document.getElementById('greet');
-    let signOutButton = document.getElementById('signOutButton');
-
-    MsgHead.innerText = `User with email "${userCreds.email}" logged in`;
-    GreetHead.innerText = `Hello ${userInfo.name}`;
-
-    let SignOut = () =>{
-        sessionStorage.removeItem("user-creds");
-        sessionStorage.removeItem("user-info");
-        window.location.href = 'index.html'
-    }
-
-    let CheckCred = () =>{
-        if (!sessionStorage.getItem("user-creds"))
-            window.location.href = 'index.html'
-
-        else{
-            displayUserInfoPopup(userCreds.email, userInfo.name);
-        }
-    }
-
-    window.addEventListener('load', CheckCred);
-    signOutButton.addEventListener('click', SignOut);
-
-    // Function to display popup with user info
-    function displayUserInfoPopup(email, name) {
-            alert(`User with email "${email}" logged in.\nWelcome ${name}.`);
-    }
-</script>
-
-<script type="module">
-    // export to pdf function
-    // export to xlsx function
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
     
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+    
+        // Get references to Firebase database
+        const db = getDatabase();
 
-    // firebase configuration
-    const firebaseConfig = {
-        // Firebase config details
-        apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
-        authDomain: "test-99503.firebaseapp.com",
-        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "test-99503",
-        storageBucket: "test-99503.appspot.com",
-        messagingSenderId: "1017306171186",
-        appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b",
-        databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
-    };
-
-    // initialize Firebase
-    const app = initializeApp(firebaseConfig);
-
-    // get references to Firebase database
-    const db = getDatabase();
-
-</script>
-<script src="js/sidebar.js"></script>
+        // Function to retrieve the name of the logged-in user, sign out function, and display popup with user info
+        let userCreds = JSON.parse(sessionStorage.getItem("user-creds"));
+        let userInfo = JSON.parse(sessionStorage.getItem("user-info"));
+    
+        let MsgHead = document.getElementById('msg');
+        let GreetHead = document.getElementById('greet');
+        let signOutButton = document.getElementById('signOutButton');
+    
+        MsgHead.innerText = `User with email "${userCreds.email}" logged in`;
+        GreetHead.innerText = `Hello ${userInfo.name}`;
+    
+        let SignOut = () => {
+            sessionStorage.removeItem("user-creds");
+            sessionStorage.removeItem("user-info");
+            window.location.href = 'index.html'
+        }
+    
+        let CheckCred = () => {
+            if (!sessionStorage.getItem("user-creds"))
+                window.location.href = 'index.html'
+    
+            else {
+                displayUserInfoPopup(userCreds.email, userInfo.name);
+            }
+        }
+    
+        window.addEventListener('load', CheckCred);
+        signOutButton.addEventListener('click', SignOut);
+    
+        //function displayUserInfoPopup(email, name) {
+        //    alert(`User with email "${email}" logged in.\nWelcome ${name}.`);
+        //}
+        
+    </script>
+    
+    <script src="js/sidebar.js"></script>
 </body>
 </html>
