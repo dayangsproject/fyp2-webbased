@@ -151,25 +151,6 @@
         </div>
     </div>
 
-    <!-- Modal for updating course -->
-    <div class="modal fade" id="coursesNotTakenModal" tabindex="-1" role="dialog" aria-labelledby="coursesNotTakenModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="coursesNotTakenModalTitle">Courses Not Taken</h5>
-                </div>
-                <div class="modal-body">
-                    <!-- Display list of courses not taken -->
-                    <ul id="coursesNotTakenList"></ul>
-                </div>
-                <div class="modal-footer">
-                    <button id="closeNotTakenModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="addCourseBtn" type="button" class="btn btn-primary">Add Course</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal for removing courses -->
     <div class="modal fade" id="manageCoursesModal" tabindex="-1" role="dialog" aria-labelledby="manageCoursesModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -289,9 +270,8 @@
 
             // Add buttons to the action cell
             const actionCell = newRow.insertCell();
-            actionCell.innerHTML =  '<button class="btn btn-primary view-edit-btn">View</button>' + '  ' +
-                                    '<button class="btn btn-success add-course-btn">Add</button>' + '  ' +
-                                    '<button class="btn btn-danger remove-course-btn">Remove</button>'; 
+            actionCell.innerHTML = '<button class="btn btn-primary view-edit-btn">View</button>' +
+                                '<button class="btn btn-danger remove-course-btn">Remove</button>'; // Add Remove Course button
 
             // Add event listener to the button for opening the modal
             actionCell.querySelector('.view-edit-btn').addEventListener('click', function() {
@@ -312,41 +292,6 @@
 
                 // Show the modal
                 $('#exampleModalCenter').modal('show');
-            });
-
-            // Add event listener to the Add Course button
-            actionCell.querySelector('.add-course-btn').addEventListener('click', function() {
-                // Retrieve list of courses not taken by the student
-                const coursesNotTakenList = document.getElementById('coursesNotTakenList');
-                coursesNotTakenList.innerHTML = ''; // Clear previous courses list
-
-                // Retrieve the student data from the database
-                const studentRef = ref(db, 'StudentInfo/' + matricNo); // Assuming 'matricNo' is accessible here
-                get(studentRef).then((studentSnapshot) => {
-                    const student = studentSnapshot.val(); // Retrieve the student data
-
-                    // Check if the student data is available
-                    if (student) {
-                        // Retrieve all available courses
-                        const allCoursesRef = ref(db, 'CourseInfo');
-                        get(allCoursesRef).then((snapshot) => {
-                            snapshot.forEach((courseSnapshot) => {
-                                const courseCode = courseSnapshot.val().courseCode;
-                                if (student.courseStatus && student.courseStatus.courseTaken && !student.courseStatus.courseTaken.includes(courseCode)) {
-                                    const listItem = document.createElement('li');
-                                    listItem.innerHTML = `<label><input type="checkbox" value="${courseCode}" /> ${courseCode}</label>`;
-                                    listItem.classList.add('selectable-course');
-                                    coursesNotTakenList.appendChild(listItem);
-                                }
-                            });
-                        });
-                    } else {
-                        console.error('Student data not found.');
-                    }
-                });
-
-                // Show the modal
-                $('#coursesNotTakenModal').modal('show');
             });
 
             // Add event listener to the Remove Course button
@@ -384,43 +329,6 @@
 
             });
         }
-
-        // Event listener to toggle the 'selected' class when a course is clicked
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('selectable-course')) {
-                // Toggle the 'selected' class on the clicked course
-                event.target.classList.toggle('selected');
-            }
-        });
-
-        // Add event listener to the Add Course button inside the coursesNotTakenModal
-        document.getElementById('addCourseBtn').addEventListener('click', function() {
-            const selectedCourses = document.querySelectorAll('.selectable-course input[type="checkbox"]:checked');
-            if (selectedCourses.length > 0) {
-                const coursesToAdd = Array.from(selectedCourses).map(courseCheckbox => courseCheckbox.value);
-                // Retrieve the matricNo of the student whose courses are being updated
-                const matricNo = ''; // Replace this with the actual matricNo
-                const studentCourseRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
-                const updates = {};
-                coursesToAdd.forEach(courseCode => {
-                    updates[courseCode] = courseCode;
-                });
-                update(studentCourseRef, updates)
-                    .then(() => {
-                        console.log("Courses added successfully!");
-                        // Refresh the list of courses taken in the modal
-                        retrieveCoursesTaken(matricNo);
-                        // Clear the selected courses
-                        selectedCourses.forEach(courseCheckbox => courseCheckbox.checked = false);
-                    })
-                    .catch((error) => {
-                        console.error("Error adding courses: ", error);
-                        alert("An error occurred while adding the courses. Please try again.");
-                    });
-            } else {
-                alert("Please select at least one course to add.");
-            }
-        });
 
         // Add event listener to the "Remove Course" button inside the modal
         document.getElementById('removeCourseBtn').addEventListener('click', function() {
