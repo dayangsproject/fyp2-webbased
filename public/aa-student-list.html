@@ -52,6 +52,7 @@
                         <i class="bx bx-chevron-right arrow-left"></i>
                     </div>
                     <ul class="menu_items submenu">
+                        <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
                         <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
                         <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
                     </ul>
@@ -185,7 +186,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getDatabase, ref, get, set, child, update } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+        import { getDatabase, ref, get, set, child, update, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
     
         // Firebase configuration
         const firebaseConfig = {
@@ -194,9 +195,8 @@
             databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "test-99503",
             storageBucket: "test-99503.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID",
-            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app"
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
         };
     
         // Initialize Firebase
@@ -206,36 +206,52 @@
         const db = getDatabase();
     
         // Function to add buttons to each row of the table
-        function addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber) { // Add phoneNumber parameter
-            // Create the button element
+        function addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber) {
+            // Create the container for buttons
+            const buttonContainer = document.createElement("div");
+    
+            // Create the "View/Edit" button
             const viewButton = document.createElement("button");
             viewButton.textContent = "View/Edit";
-            viewButton.classList.add("btn", "btn-primary");
-            // Add an event listener to open the modal and populate its input fields
+            viewButton.classList.add("btn", "btn-primary", "mr-2");
             viewButton.addEventListener("click", function() {
                 // Populate the modal input fields with student details
                 document.getElementById("matricNo").value = matricNo;
                 document.getElementById("name").value = studentName;
                 document.getElementById("intake").value = admission;
-                document.getElementById("phoneNumber").value = phoneNumber; 
+                document.getElementById("phoneNumber").value = phoneNumber;
                 document.getElementById("mode").value = mode;
                 document.getElementById("status").value = status;
                 // Show the modal
                 showModal();
             });
-
-            // Create a new cell in the row and append the button
+    
+            // Create the "Delete" button
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.classList.add("btn", "btn-danger");
+            deleteButton.addEventListener("click", function() {
+                if (confirm(`Are you sure you want to delete student with Matric No: ${matricNo}?`)) {
+                    deleteStudent(matricNo);
+                }
+            });
+    
+            // Append buttons to the container
+            buttonContainer.appendChild(viewButton);
+            buttonContainer.appendChild(deleteButton);
+    
+            // Create a new cell in the row and append the button container
             const td = document.createElement("td");
-            td.appendChild(viewButton);
-
+            td.appendChild(buttonContainer);
+    
             return td;
         }
-
+    
         // Function to add a row to the table
-        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status, phoneNumber) { // Add phoneNumber parameter
+        function addRowToTable(studentNo, matricNo, studentName, admission, mode, status, phoneNumber) {
             const tbody = document.getElementById('tbody1');
             const tr = document.createElement("tr");
-
+    
             // Add cells to the row
             const cells = [
                 studentNo,
@@ -245,109 +261,79 @@
                 mode,
                 status
             ];
-
+    
             // Append cells to the row
             cells.forEach(cell => {
                 const td = document.createElement("td");
                 td.textContent = cell;
                 tr.appendChild(td);
             });
-
+    
             // Create and append the button cell
             const buttonTd = document.createElement("td");
-            buttonTd.appendChild(addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber)); // Pass phoneNumber
+            buttonTd.appendChild(addButtonsToTable(matricNo, studentName, admission, mode, status, phoneNumber));
             tr.appendChild(buttonTd);
-
+    
             // Append the row to the table body
             tbody.appendChild(tr);
         }
     
         function getAllDataOnce() {
             const dbRef = ref(db);
-
+    
             get(child(dbRef, "StudentInfo")).then((snapshot) => {
                 const students = [];
                 snapshot.forEach((childSnapshot) => {
                     const matricNo = childSnapshot.key; // Get the matric number from the key
                     const studentData = childSnapshot.val(); // Retrieve other data
-                    const { studentName, admission, mode, status, phoneNumber } = studentData; 
-                    students.push({ matricNo, studentName, admission, mode, status, phoneNumber }); 
+                    const { studentName, admission, mode, status, phoneNumber } = studentData;
+                    students.push({ matricNo, studentName, admission, mode, status, phoneNumber });
                 });
-
+    
                 // Add each student's data to the table
                 students.forEach((student, index) => {
-                    addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status, student.phoneNumber); 
+                    addRowToTable(index + 1, student.matricNo, student.studentName, student.admission, student.mode, student.status, student.phoneNumber);
                 });
             });
         }
-
+    
         // Function to show the modal
         function showModal() {
             $('#exampleModalCenter').modal('show');
         }
-
-        // Event listener for the "Close" button
-        document.getElementById("closeModalBtn").addEventListener("click", function() {
-            closeModal();
-        });
-
-        // Event listener for the "Save changes" button
-        document.getElementById("saveChangesBtn").addEventListener("click", function() {
-            saveChanges();
-        });
-
+    
         // Function to close the modal
         function closeModal() {
             $('#exampleModalCenter').modal('hide');
         }
-
-        // Function to save changes to the database
-        function saveChanges() {
-            // Retrieve updated student details from the modal input fields
-            const matricNo = document.getElementById("matricNo").value;
-            const newName = document.getElementById("name").value;
-            const newIntake = document.getElementById("intake").value;
-            const newPhoneNumber = document.getElementById("phoneNumber").value; 
-            const newMode = document.getElementById("mode").value;
-            const newStatus = document.getElementById("status").value;
-
-            // Reference to the student in the database
+    
+        // Function to delete a student from the database
+        function deleteStudent(matricNo) {
             const studentRef = ref(db, `StudentInfo/${matricNo}`);
-
-            // Update student details in the database
-            update(studentRef, {
-                studentName: newName,
-                admission: newIntake,
-                phoneNumber: newPhoneNumber, 
-                mode: newMode,
-                status: newStatus
-            })
-            .then(() => {
-                // Close the modal after updating
-                closeModal();
-                // Reload the page to see the changes in the table
-                location.reload();
-            })
-            .catch((error) => {
-                console.error("Error updating student details: ", error);
-            });
+            remove(studentRef)
+                .then(() => {
+                    alert('Student deleted successfully!');
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error("Error deleting student: ", error);
+                });
         }
-
+    
         // Function to handle search
         function handleSearch() {
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('#tbody1 tr');
-
+    
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
                 let found = false;
-
+    
                 cells.forEach(cell => {
                     if (cell.textContent.toLowerCase().includes(searchQuery)) {
                         found = true;
                     }
                 });
-
                 if (found) {
                     row.style.display = '';
                 } else {

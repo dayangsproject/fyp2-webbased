@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="menu_content"> 
+            <ul class="menu_items">
+                <i id="sidebarOpen"></i>
+                <li class="item no-click">
+                    <a class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bx-menu'></i>
+                        </span>
+                        <h3>Menu</h3>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-dashboard'></i>
+                        </span>
+                        <span class="navlink">Dashboard</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-user-circle'></i>
+                        </span>
+                        <span class="navlink">Profile</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-profile.html" class="nav_link sublink">Edit profile</a></li>
+                        <li><a href="aa-password.html" class="nav_link sublink">Change password</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-spreadsheet'></i>
+                        </span>
+                        <span class="navlink">Student</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
+                        <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
+                        <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-food-menu'></i>
+                        </span>
+                        <span class="navlink">Course</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-viewcourse.html" class="nav_link sublink">View course list</a></li>
+                        <li><a href="aa-addcourse.html" class="nav_link sublink">Add course</a></li>
+                        <li><a href="aa-editcourse.html" class="nav_link sublink">Edit course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="aa-report.html" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-report'></i>
+                        </span>
+                        <span class="navlink">Report</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link" id="signOutButton">
+                        <span class="navlink_icon">
+                            <i class='bx bx-exit'></i>
+                        </span>
+                        <span class="navlink">Log Out</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i id="darkLight"></i>
+                        </span>
+                        <span class="navlink"></span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Sidebar Open / Close -->
+            <div class="bottom_content">
+                <div class="bottom expand_sidebar">
+                    <span> Expand</span>
+                    <i class='bx bx-expand-horizontal'></i>
+                </div>
+                <div class="bottom collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class='bx bx-collapse-horizontal'></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main content -->
+    <div class="container mt-5">
+        <h1 class="mb-4">Add New Student</h1>
+        <form id="addStudentForm">
+            <div class="form-group col-md-6">
+                <label for="matricNo">Matric No:</label>
+                <input type="number" id="matricNo" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="name">Name:</label>
+                <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="intake">Intake:</label>
+                <input type="number" id="intake" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="number" id="phoneNumber" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="mode">Mode:</label>
+                <select id="mode" class="form-control" required>
+                    <option value=""></option>
+                    <option value="febFull">February Full Time</option>
+                    <option value="juneFull">June Full Time</option>
+                    <option value="octFull">October Full Time</option>
+                    <option value="febPart">February Part Time</option>
+                    <option value="junePart">June Part Time</option>
+                    <option value="octPart">October Part Time</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="status">Status:</label>
+                <select id="status" class="form-control" required>
+                    <option value=""></option>
+                    <option value="Active">Active</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="On hiatus">On hiatus</option>
+                    <option value="Withdrawn">Withdrawn</option>
+                    <option value="Failed and quit">Failed and quit</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <button type="submit" class="btn btn-primary" id="addStudentBtn" disabled>Add Student</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBYET4H_QA7j0QggLxjh-KQcX_O0h_YAao",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        // Function to check if all required fields are filled
+        function checkFormValidity() {
+            const matricNo = document.getElementById('matricNo').value;
+            const name = document.getElementById('name').value;
+            const intake = document.getElementById('intake').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const mode = document.getElementById('mode').value;
+            const status = document.getElementById('status').value;
+    
+            // Enable the button only if all fields have values
+            const addButton = document.getElementById('addStudentBtn');
+            addButton.disabled = !(matricNo && name && intake && phoneNumber && mode && status);
+        }
+    
+        // Add event listeners to form inputs to check validity
+        document.getElementById('matricNo').addEventListener('input', checkFormValidity);
+        document.getElementById('name').addEventListener('input', checkFormValidity);
+        document.getElementById('intake').addEventListener('input', checkFormValidity);
+        document.getElementById('phoneNumber').addEventListener('input', checkFormValidity);
+        document.getElementById('mode').addEventListener('input', checkFormValidity);
+        document.getElementById('status').addEventListener('input', checkFormValidity);
+    
+        // Also, trigger the checkFormValidity function once when the page loads
+        checkFormValidity();
+    
+        // Add event listener to the form for submission
+        document.getElementById('addStudentForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+                
+        // Get form values
+        const matricNo = document.getElementById('matricNo').value;
+        const name = document.getElementById('name').value;
+        const intake = document.getElementById('intake').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const mode = document.getElementById('mode').value;
+        const status = document.getElementById('status').value;
+
+        // Reference to the student in the database
+        const studentRef = ref(db, `StudentInfo/${matricNo}`);
+
+        // Check if the student already exists
+        get(studentRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                // Student already exists
+                alert('Student with this Matric No already exists in the database!');
+            } else {
+                // Student does not exist, add to the database
+                set(studentRef, {
+                    studentName: name,
+                    admission: intake,
+                    phoneNumber: phoneNumber,
+                    mode: mode,
+                    status: status
+                })
+                .then(() => {
+                    // Clear form
+                    document.getElementById('addStudentForm').reset();
+                    alert('Student added successfully!');
+                })
+                .catch((error) => {
+                    console.error("Error adding student: ", error);
+                });
+            }
+        })
+        .catch((error) => {
+            console.error("Error checking student existence: ", error);
+        });
+    });
+    </script>
+    <script src="js/sidebar.js"></script>
+</body>
+</html>
