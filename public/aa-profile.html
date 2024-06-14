@@ -14,118 +14,104 @@
 </head>
 <body>
 
-    <!-- sidebar -->
+    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="menu_content"> 
-        <ul class="menu_items">
-            
-            <i id="sidebarOpen"></i>
-
-            <li class="item no-click">
-            <a class="nav_link">
-                <span class="navlink_icon">
-                <i class='bx bx-menu' ></i>
-                </span>
-                <h3>Menu</h3>
-            </a>
-            </li>
-
-            <li class="item">
-                <a href="#" class="nav_link" id=" ">
-                    <span class="navlink_icon">
-                        <i class='bx bxs-dashboard'></i>
-                </span>
-                <span class="navlink">Dashboard</span>
-                </a>
-            </li>
-            
-            <li class="item">
-            <div href="#" class="nav_link submenu_item">
-                <span class="navlink_icon">
-                <i class='bx bxs-user-circle'></i>
-                </span>
-                <span class="navlink">Profile</span>
-                <i class="bx bx-chevron-right arrow-left"></i>
-            </div>
-
-            <ul class="menu_items submenu">
-                <a href="aa-profile.html" class="nav_link sublink">Edit profile</a>
-                <a href="aa-password.html" class="nav_link sublink">Change password</a>
+            <ul class="menu_items">
+                <i id="sidebarOpen"></i>
+                <li class="item no-click">
+                    <a class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bx-menu'></i>
+                        </span>
+                        <h3>Menu</h3>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="aa-home.html" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-dashboard'></i>
+                        </span>
+                        <span class="navlink">Dashboard</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-user-circle'></i>
+                        </span>
+                        <span class="navlink">Profile</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-profile.html" class="nav_link sublink">Edit profile</a></li>
+                        <li><a href="aa-password.html" class="nav_link sublink">Change password</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-spreadsheet'></i>
+                        </span>
+                        <span class="navlink">Student</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
+                        <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
+                        <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-food-menu'></i>
+                        </span>
+                        <span class="navlink">Course</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+                    <ul class="menu_items submenu">
+                        <li><a href="aa-viewcourse.html" class="nav_link sublink">View course list</a></li>
+                        <li><a href="aa-addcourse.html" class="nav_link sublink">Add course</a></li>
+                        <li><a href="aa-editcourse.html" class="nav_link sublink">Edit course</a></li>
+                    </ul>
+                </li>
+                <li class="item">
+                    <a href="aa-report.html" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class='bx bxs-report'></i>
+                        </span>
+                        <span class="navlink">Report</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link" id="signOutButton">
+                        <span class="navlink_icon">
+                            <i class='bx bx-exit'></i>
+                        </span>
+                        <span class="navlink">Log Out</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i id="darkLight"></i>
+                        </span>
+                        <span class="navlink"></span>
+                    </a>
+                </li>
             </ul>
-            </li>
-
-            <li class="item">
-            <div href="#" class="nav_link submenu_item">
-                <span class="navlink_icon">
-                    <i class='bx bxs-spreadsheet'></i>
-                </span>
-                <span class="navlink">Student</span>
-                <i class="bx bx-chevron-right arrow-left"></i>
+            <!-- Sidebar Open / Close -->
+            <div class="bottom_content">
+                <div class="bottom expand_sidebar">
+                    <span> Expand</span>
+                    <i class='bx bx-expand-horizontal'></i>
+                </div>
+                <div class="bottom collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class='bx bx-collapse-horizontal'></i>
+                </div>
             </div>
-
-            <ul class="menu_items submenu">
-                <a href="aa-student-list.html" class="nav_link sublink">Student list</a>
-                <a href="aa-studentcourse.html" class="nav_link sublink">Student course</a>
-            </ul>
-            </li>
-
-            <li class="item">
-            <div href="#" class="nav_link submenu_item">
-                <span class="navlink_icon">
-                <i class='bx bxs-food-menu'></i>
-                </span>
-                <span class="navlink">Course</span>
-                <i class="bx bx-chevron-right arrow-left"></i>
-            </div>
-
-            <ul class="menu_items submenu">
-                <a href="aa-viewcourse.html" class="nav_link sublink">View course list</a>
-                <a href="aa-addcourse.html" class="nav_link sublink">Add course</a>
-                <a href="aa-editcourse.html" class="nav_link sublink">Edit course</a>
-            </ul>
-            </li>
-
-            <li class="item">
-                <a href="aa-report.html" class="nav_link" id=" ">
-                    <span class="navlink_icon">
-                        <i class='bx bxs-report' ></i>
-                    </span>
-                    <span class="navlink">Report</span>
-                </a>
-            </li>
-
-
-            <li class="item">
-            <a href="#" class="nav_link" id="signOutButton">
-                <span class="navlink_icon">
-                <i class='bx bx-exit' ></i>
-                </span>
-                <span class="navlink">Log Out</span>
-            </a>
-            </li>
-            
-            <li class="item">
-            <a href="#" class="nav_link">
-                <span class="navlink_icon">
-                <i id="darkLight"></i>
-                </span>
-                <span class="navlink"> </span>
-            </a>
-            </li>
-
-        </ul>
-
-        <!-- Sidebar Open / Close -->
-        <div class="bottom_content">
-            <div class="bottom expand_sidebar">
-            <span> Expand</span>
-            <i class='bx bx-expand-horizontal'></i>
-            </div>
-            <div class="bottom collapse_sidebar">
-            <span> Collapse</span>
-            <i class='bx bx-collapse-horizontal' ></i>
-            </div>
-        </div>
         </div>
     </nav>
 
