@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Performance</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <style>
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Students Performance</h1>
+        <input type="text" id="searchInput" class="form-control mb-2" placeholder="Search...">
+        <table class="table table-light">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Matric No</th>
+                    <th>Name</th>
+                    <th>Intake</th>
+                    <th>Mode</th>
+                    <th>Status</th>
+                    <th>CGPA</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbody1"></tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Adding GPA -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalTitle">Add/Edit GPA for Course</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="matricNoInput">
+                    <div class="form-group">
+                        <label for="courseSelect">Select Course:</label>
+                        <select class="form-control" id="courseSelect">
+                            <!-- Options will be dynamically added here -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gpaSelect">Select GPA:</label>
+                        <select class="form-control" id="gpaSelect">
+                            <option value="4.00">A</option>
+                            <option value="3.67">A-</option>
+                            <option value="3.33">B+</option>
+                            <option value="3.00">B</option>
+                            <option value="2.67">B-</option>
+                            <option value="2.33">C+</option>
+                            <option value="2.00">C</option>
+                            <option value="1.67">C-</option>
+                            <option value="1.00">D</option>
+                            <option value="0.00">F</option>
+                        </select>
+                    </div>                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="saveGpaButton">Save GPA</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script type="module">
+        // Firebase configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "API_KEY",
+            authDomain: "test-99503.firebaseapp.com",
+            databaseURL: "https://test-99503-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "test-99503",
+            storageBucket: "test-99503.appspot.com",
+            messagingSenderId: "1017306171186",
+            appId: "1:1017306171186:web:851d2a7cde6f1a26b8792b"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+    
+        function getAllStudents() {
+            const tbody = document.getElementById('tbody1');
+            tbody.innerHTML = ''; // Clear previous data
+
+            const studentsRef = ref(db, 'StudentInfo');
+
+            get(studentsRef).then((snapshot) => {
+                let index = 1; // Initialize index here
+
+                snapshot.forEach((childSnapshot) => {
+                    const studentKey = childSnapshot.key;
+                    const studentData = childSnapshot.val();
+                    const { studentName, admission, mode, status } = studentData;
+
+                    // Fetch CGPA from the student data
+                    const cgpa = studentData.courseStatus?.['gpa-result']?.[mode]?.cgpa || 'N/A';
+
+                    // Create table row
+                    const tr = document.createElement('tr');
+
+                    // Add cells
+                    const cells = [
+                        index, // Ensure index starts from 1
+                        studentKey,
+                        studentName,
+                        admission,
+                        mode,
+                        status,
+                        cgpa, // Add CGPA to the cells array
+                        addButtonsToTable(studentKey, studentData) // Pass studentData to addButtonsToTable
+                    ];
+
+                    cells.forEach(cell => {
+                        const td = document.createElement('td');
+                        if (typeof cell === 'object' && cell instanceof HTMLElement) {
+                            td.appendChild(cell); // Append button container directly
+                        } else {
+                            td.textContent = cell; // Set text content for other cells
+                        }
+                        tr.appendChild(td); // Append each td to the row
+                    });
+
+                    tbody.appendChild(tr); // Append the row to the tbody
+                    index++; // Increment index for the next student
+                });
+            }).catch((error) => {
+                console.error('Error fetching students:', error);
+            });
+        }
+            
+        function addButtonsToTable(matricNo, studentData) {
+            // Create a container div for buttons
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('btn-group'); // Add Bootstrap class if needed
+    
+            // Add GPA button
+            const addGpaButton = document.createElement('button');
+            addGpaButton.textContent = 'Add/Edit';
+            addGpaButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mr-1');
+            addGpaButton.addEventListener('click', function() {
+                showAddModal(matricNo, studentData); // Pass studentData to showAddModal
+            });
+            buttonContainer.appendChild(addGpaButton);
+    
+            // Create a td element to hold buttons
+            const td = document.createElement('td');
+            td.appendChild(buttonContainer);
+    
+            return td;
+        }
+    
+        function populateCourses(matricNo, studentData) {
+            const courseSelect = document.getElementById('courseSelect');
+            const mode = studentData.mode;
+            courseSelect.innerHTML = ''; // Clear previous options
+    
+            // Fetch courses taken by the student
+            const coursesTakenRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
+            const gpaRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa/${mode}`);
+    
+            // Fetching courses taken
+            get(coursesTakenRef).then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const courseCode = childSnapshot.val();
+                    const option = document.createElement('option');
+                    option.value = courseCode;
+                    option.textContent = courseCode;
+                    courseSelect.appendChild(option);
+                });
+            }).catch((error) => {
+                console.error('Error fetching courses:', error);
+            });
+    
+            // Fetching GPA
+            get(gpaRef).then((snapshot) => {
+                snapshot.forEach((semesterSnapshot) => {
+                    const semester = semesterSnapshot.key; // Get the semester key
+                    semesterSnapshot.forEach((childSnapshot) => {
+                        const courseCode = childSnapshot.key;
+                        const gpa = childSnapshot.val();
+                        // Optionally update UI to display GPA for each course under the selected mode/semester
+                        console.log(`Semester: ${semester}, Course: ${courseCode}, GPA: ${gpa}`);
+                    });
+                });
+            }).catch((error) => {
+                console.error('Error fetching GPA:', error);
+            });
+        }
+    
+        function calculateGPA(matricNo, studentData, semester) {
+            const mode = studentData.mode;
+            const gpaRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa/${mode}/${semester}`);
+
+            get(gpaRef).then((snapshot) => {
+                let totalGPA = 0;
+                let totalCreditHours = 0;
+                let count = 0;
+
+                snapshot.forEach((childSnapshot) => {
+                    const courseCode = childSnapshot.key;
+                    const gpa = parseFloat(childSnapshot.val());
+
+                    // Fetch course credit hours from CourseInfo
+                    const courseInfoRef = ref(db, `CourseInfo/${courseCode}/creditHour`);
+                    get(courseInfoRef).then((creditHourSnapshot) => {
+                        const creditHour = parseFloat(creditHourSnapshot.val());
+                        totalGPA += gpa * creditHour;
+                        totalCreditHours += creditHour;
+                        count++;
+
+                        if (count === snapshot.size) {
+                            // Calculate GPA for the semester
+                            const semesterGPA = totalCreditHours > 0 ? totalGPA / totalCreditHours : 0;
+
+                            // Save calculated GPA to Firebase under gpa-result
+                            const gpaResultRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa-result/${mode}/${semester}`);
+                            set(gpaResultRef, semesterGPA.toFixed(2)).then(() => {
+                                console.log(`GPA calculated and saved for ${semester}: ${semesterGPA.toFixed(2)}`);
+
+                                // Calculate CGPA after saving semester GPA
+                                calculateCGPA(matricNo, studentData);
+                            }).catch((error) => {
+                                console.error('Error saving GPA result:', error);
+                            });
+                        }
+                    }).catch((error) => {
+                        console.error('Error fetching course credit hour:', error);
+                    });
+                });
+            }).catch((error) => {
+                console.error('Error fetching GPA:', error);
+            });
+        }
+    
+        function saveGPA(matricNo, studentData) {
+            const courseCode = document.getElementById('courseSelect').value;
+            const gpa = document.getElementById('gpaSelect').value; // Fetch GPA from select box
+            const mode = studentData.mode;
+
+            // Fetch the course's semester from CourseInfo
+            const courseInfoRef = ref(db, `CourseInfo/${courseCode}/courseSemester`);
+            get(courseInfoRef).then((snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const courseSemester = childSnapshot.val();
+                    const parts = courseSemester.split('-'); // Split into mode and semester parts
+                    const courseMode = parts[0]; // Mode part (febFull, juneFull, octFull, etc.)
+                    const courseSemesterNumber = parts[1]; // Semester number part (sem1, sem2, sem3, etc.)
+
+                    // Determine if the course semester matches the student's mode
+                    if (mode === courseMode) {
+                        // Get semester name based on the mode and course semester number
+                        const semester = `${mode}-${courseSemesterNumber}`;
+
+                        // Save GPA to Firebase under StudentInfo, under the correct semester based on mode and course semester
+                        const gpaRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa/${mode}/${semester}/${courseCode}`);
+                        set(gpaRef, gpa).then(() => {
+                            // Recalculate GPA result for the semester
+                            calculateGPA(matricNo, studentData, semester);
+
+                            closeModal(); // Close modal after saving
+                            // Optionally, update UI to reflect the saved GPA
+                        }).catch((error) => {
+                            console.error('Error saving GPA:', error);
+                        });
+                    }
+                });
+            }).catch((error) => {
+                console.error('Error fetching course semester:', error);
+            });
+        }
+
+        function calculateCGPA(matricNo, studentData) {
+            const mode = studentData.mode;
+            const gpaResultRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa-result/${mode}`);
+
+            get(gpaResultRef).then((snapshot) => {
+                let totalCGPA = 0;
+                let count = 0;
+
+                snapshot.forEach((childSnapshot) => {
+                    if (childSnapshot.key !== 'cgpa') {
+                        const gpa = parseFloat(childSnapshot.val());
+                        totalCGPA += gpa;
+                        count++;
+                    }
+                });
+
+                if (count > 0) {
+                    const cgpa = totalCGPA / count;
+
+                    // Save calculated CGPA to Firebase under gpa-result
+                    const cgpaRef = ref(db, `StudentInfo/${matricNo}/courseStatus/gpa-result/${mode}/cgpa`);
+                    set(cgpaRef, cgpa.toFixed(2)).then(() => {
+                        console.log(`CGPA calculated and saved: ${cgpa.toFixed(2)}`);
+                    }).catch((error) => {
+                        console.error('Error saving CGPA result:', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error fetching GPA results for CGPA calculation:', error);
+            });
+        }
+
+    
+        function showAddModal(matricNo, studentData) {
+            document.getElementById('matricNoInput').value = matricNo; // Set the hidden input value
+            populateCourses(matricNo, studentData); // Pass studentData to populateCourses
+            $('#addModal').modal('show'); // Show the modal
+    
+            // Save GPA button event listener
+            document.getElementById('saveGpaButton').addEventListener('click', function() {
+                saveGPA(matricNo, studentData); // Pass both matricNo and studentData to saveGPA function
+            });
+        }
+    
+        // Function to close the modal
+        function closeModal() {
+            $('#addModal').modal('hide');
+        }
+
+        // Handle search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchQuery = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tbody1 tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let found = false;
+
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(searchQuery)) {
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Ensure the table is populated when the page loads
+        window.onload = () => {
+            getAllStudents();
+        };
+    </script>
+</body>
+</html>
