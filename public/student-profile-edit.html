@@ -11,6 +11,66 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/styles-2.css" />
+    <style>
+        #mainContent {
+            width: 100%; /* Ensure it takes full width of the container */
+            max-width: 600px; /* Limit maximum width */
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px auto; /* Center align and provide space around */
+        }
+    
+        h2 {
+            margin-bottom: 20px;
+        }
+    
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px; /* Space between label and input */
+            display: block; /* Ensure labels are on a new line */
+        }
+    
+        .form-control {
+            border: none;
+            background: #e9ecef;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200%; /* Full width for inputs */
+            box-sizing: border-box; /* Include padding in width calculation */
+            font-size: 14px; /* Adjust font size for inputs */
+        }
+    
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff; /* Text color */
+            padding: 10px 20px; /* Adjust padding for button */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+    
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+    
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
 </head>
 <body>
     <!-- sidebar -->
@@ -96,54 +156,62 @@
         <h2 class="form-title mb-3">Edit Profile</h2>
         <div class="row">
             <div class="col-md-6">
-                <label for="displayName" class="form-label">Name:</label>
-                <input type="text" class="form-control" id="displayName" disabled>
-                <br>
-                <label for="displayEmail" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="displayEmail" disabled>
-                <br>
-                <label for="matricNoInput" class="form-label">Matric number:</label>
-                <input type="number" class="form-control" id="matricNoInput">
-                <br>
-                <label for="phoneNumberInput" class="form-label">Phone Number:</label>
-                <input type="number" class="form-control" id="phoneNumberInput">
-                <br>
-                <label for="statusInput" class="form-label">Status:</label>
-                <select id="statusInput" class="form-select">
-                    <option value=" "> </option>
-                    <option value="Active">Active</option>
-                    <option value="Graduate">Graduate</option>
-                    <option value="On hiatus">On hiatus</option>
-                    <option value="Withdrawn">Withdrawn</option>
-                    <option value="Failed and quit">Failed and quit</option>
-                </select>
-                <br>
-                <label for="admissionInput" class="form-label">Year of admission:</label>
-                <select id="admissionInput" class="form-select">
-                    <option value=" "> </option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                </select>
-                <br>
-                <label for="modeInput" class="form-label">Intake/Mode:</label>
-                <select id="modeInput" class="form-select">
-                    <option value=" "> </option>
-                    <option value="febFull">February Full Time</option>
-                    <option value="juneFull">June Full Time</option>
-                    <option value="octFull">October Full Time</option>
-                    <option value="febPart">February Part Time</option>
-                    <option value="junePart">June Part Time</option>
-                    <option value="octPart">October Part Time</option>
-                </select>
-                <br>
+                <div class="mb-3">
+                    <label for="displayName" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="displayName" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="displayEmail" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="displayEmail" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="matricNoInput" class="form-label">Matric number:</label>
+                    <input type="number" class="form-control" id="matricNoInput">
+                </div>
+                <div class="mb-3">
+                    <label for="phoneNumberInput" class="form-label">Phone Number:</label>
+                    <input type="number" class="form-control" id="phoneNumberInput">
+                </div>
+                <div class="mb-3">
+                    <label for="statusInput" class="form-label">Status:</label>
+                    <select id="statusInput" class="form-select">
+                        <option value=" "> </option>
+                        <option value="Active">Active</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="On hiatus">On hiatus</option>
+                        <option value="Withdrawn">Withdrawn</option>
+                        <option value="Failed and quit">Failed and quit</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="admissionInput" class="form-label">Year of admission:</label>
+                    <select id="admissionInput" class="form-select">
+                        <option value=" "> </option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="modeInput" class="form-label">Intake/Mode:</label>
+                    <select id="modeInput" class="form-select">
+                        <option value=" "> </option>
+                        <option value="febFull">February Full Time</option>
+                        <option value="juneFull">June Full Time</option>
+                        <option value="octFull">October Full Time</option>
+                        <option value="febPart">February Part Time</option>
+                        <option value="junePart">June Part Time</option>
+                        <option value="octPart">October Part Time</option>
+                    </select>
+                </div>
                 <button id="AddButton" class="btn btn-primary">Save</button> 
-                <button id="homeButton" class="btn btn-secondary">Home</button>
+                <button type="button" class="btn btn-secondary" id="profileButton">Back</button>
             </div>
         </div>
     </div>
+
 
 
     <script type="module" src="js/sidebar.js"></script>
@@ -338,6 +406,15 @@
             window.location.href = 'index.html';
         }
 
+        // Function to navigate to admin-edit.html
+        function goToProfilePage() {
+                window.location.href = 'student-profile.html';
+        }
+
+        // Event listener for the edit profile button
+        const profileButton = document.getElementById('profileButton');
+        profileButton.addEventListener('click', goToProfilePage);
+
         // Event listener to sign out user
         const signOutButton = document.getElementById('signOutButton');
         signOutButton.addEventListener('click', signOut);
@@ -345,14 +422,6 @@
         // Event listener for the button to handle data
         AddButton.addEventListener('click', handleData);
 
-        // Function to navigate to home page
-        function goToHome() {
-            window.location.href = 'student-home.html';
-        }
-
-        // Event listener for the Home button
-        const homeButton = document.getElementById('homeButton');
-        homeButton.addEventListener('click', goToHome);
 
       </script>
 </body>

@@ -8,6 +8,107 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/styles-2.css" />
+    <style> 
+        #mainContent {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+    
+        span {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+    
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+    
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    
+        .button-container button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+    
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+    
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+    
+        .btn-primary:hover, .btn-secondary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-add {
+        background-color: #28a745;
+        color: #fff;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
+
+        .btn-remove {
+        background-color: #ee5564;
+        color: #fff;
+        }   
+
+        .btn-remove:hover {
+            background-color: #ee5564;
+        }
+    </style>
 </head>
 <body>
     <!-- sidebar -->
@@ -91,30 +192,63 @@
 
     <!-- Main content -->
     <div id="mainContent">
-        <label>Name: </label>
-        <span id="displayName"></span> <button id="homeButton">Home</button>
-        <br><br>
-        <label>Email: </label>
-        <span id="displayEmail"></span>
-        <br><br>
-        <label>Matric number</label>
-        <span id="matricNoInput"></span>
-        <br><br>
-        <label>Mode: </label>
-        <span id="modeInput"></span>
-        <br><br>
-        <label for="semesterSelect">Select Semester:</label>
-            <select id="semesterSelect">
-            </select>
-        <br><br>
-        <div id="courseList">
-            <h4>Courses for Current Mode:</h4>
-            <ul id="courseListItems"></ul>
+        <h2>Profile</h2>
+
+        <div>
+            <label>Name:</label>
+            <span id="displayName"></span>
         </div>
-        <div id="enrolledCourses">
-            <h4>Enrolled Courses:</h4>
-            <ul id="enrolledCoursesList"></ul>
+        <br>
+
+        <div>
+            <label>Email:</label>
+            <span id="displayEmail"></span>
         </div>
+        <br>
+
+        <div>
+            <label>Matric number:</label>
+            <span id="matricNoInput"></span>
+        </div>
+        <br>
+
+        <div>
+            <label>Mode:</label>
+            <span id="modeInput"></span>
+        </div>
+        <br>
+
+        <div>
+            <label for="semesterSelect">Select Semester:</label>
+            <select id="semesterSelect"></select>
+        </div>
+        <br>
+
+        <h4>Courses for Current Mode</h4>
+        <table id="courseList">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                </tr>
+            </thead>
+            <tbody id="courseListItems">
+                <!-- Course items will be dynamically added here -->
+            </tbody>
+        </table>
+        <br>
+
+        <h4>Enrolled Courses</h4>
+        <table id="enrolledCourses">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                </tr>
+            </thead>
+            <tbody id="enrolledCoursesList">
+                <!-- Enrolled course items will be dynamically added here -->
+            </tbody>
+        </table>
+        <br>
     </div>
     
     <script type="module">
@@ -312,6 +446,7 @@
                                                 // Add an "add" button beside the course name
                                                 const addButton = document.createElement('button');
                                                 addButton.textContent = 'Add';
+                                                addButton.classList.add('btn', 'btn-add'); // For styling
                                                 addButton.addEventListener('click', () => {
                                                     // Call a function to handle adding the course
                                                     addCourseToDatabase(courseData.courseCode);
@@ -431,6 +566,7 @@
                             // Add a "remove" button beside the course name
                             const removeButton = document.createElement('button');
                             removeButton.textContent = 'Remove';
+                            removeButton.classList.add('btn', 'btn-remove'); // For styling
                             removeButton.addEventListener('click', () => {
                                 removeCourseFromDatabase(courseData.courseCode); // Pass course code
                             });
@@ -551,10 +687,6 @@
                 console.error(error);
             });
         }
-
-        // Event listener for the Home button
-        const homeButton = document.getElementById('homeButton');
-        homeButton.addEventListener('click', goToHome);
 
         // Function to navigate to home page
         function goToHome() {
