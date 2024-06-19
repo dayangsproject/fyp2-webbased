@@ -7,6 +7,55 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
+    <style>
+        #mainContent {
+            width: 100%; /* Ensure it takes full width of the container */
+            max-width: 600px; /* Limit maximum width */
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px auto; /* Center align and provide space around */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px; /* Adjust spacing between form groups */
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px; /* Space between label and input */
+            display: block; /* Ensure labels are on a new line */
+        }
+
+        .form-control {
+            border: none;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%; /* Full width for inputs */
+            box-sizing: border-box; /* Include padding in width calculation */
+            font-size: 14px; /* Adjust font size for inputs */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff; /* Text color */
+            padding: 10px 20px; /* Adjust padding for button */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <!-- Sidebar -->
@@ -55,6 +104,7 @@
                         <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
                         <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
                         <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                        <li><a href="aa-performance.html" class="nav_link sublink">Student performance</a></li>
                     </ul>
                 </li>
                 <li class="item">
@@ -111,27 +161,27 @@
     </nav>
     
     <!-- Main content -->
-    <div class="container mt-5">
-        <h1 class="mb-4">Add New Student</h1>
+    <div id="mainContent" class="container mt-5">
+        <h1>Add New Student</h1>
         <form id="addStudentForm">
-            <div class="form-group col-md-6">
-                <label for="matricNo">Matric No:</label>
+            <div class="form-group">
+                <label for="matricNo" class="form-label">Matric No:</label>
                 <input type="number" id="matricNo" class="form-control" required>
             </div>
-            <div class="form-group col-md-6">
-                <label for="name">Name:</label>
+            <div class="form-group">
+                <label for="name" class="form-label">Name:</label>
                 <input type="text" id="name" class="form-control" required>
             </div>
-            <div class="form-group col-md-6">
-                <label for="intake">Intake:</label>
+            <div class="form-group">
+                <label for="intake" class="form-label">Intake:</label>
                 <input type="number" id="intake" class="form-control" required>
             </div>
-            <div class="form-group col-md-6">
-                <label for="phoneNumber">Phone Number:</label>
+            <div class="form-group">
+                <label for="phoneNumber" class="form-label">Phone Number:</label>
                 <input type="number" id="phoneNumber" class="form-control" required>
             </div>
-            <div class="form-group col-md-6">
-                <label for="mode">Mode:</label>
+            <div class="form-group">
+                <label for="mode" class="form-label">Mode:</label>
                 <select id="mode" class="form-control" required>
                     <option value=""></option>
                     <option value="febFull">February Full Time</option>
@@ -142,8 +192,8 @@
                     <option value="octPart">October Part Time</option>
                 </select>
             </div>
-            <div class="form-group col-md-6">
-                <label for="status">Status:</label>
+            <div class="form-group">
+                <label for="status" class="form-label">Status:</label>
                 <select id="status" class="form-control" required>
                     <option value=""></option>
                     <option value="Active">Active</option>
@@ -153,7 +203,7 @@
                     <option value="Failed and quit">Failed and quit</option>
                 </select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group">
                 <button type="submit" class="btn btn-primary" id="addStudentBtn" disabled>Add Student</button>
             </div>
         </form>

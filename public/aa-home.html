@@ -57,6 +57,7 @@
                         <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
                         <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
                         <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                        <li><a href="aa-performance.html" class="nav_link sublink">Student performance</a></li>
                     </ul>
                 </li>
                 <li class="item">
@@ -238,6 +239,22 @@
                             <div class="col-auto">
                                 <i class="fas fa-calendar fa-2x text-gray-300"></i>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Chart Row -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">CGPA Distribution</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bar">
+                            <canvas id="myBarChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -443,7 +460,152 @@
                 console.error('Error fetching courses: ', error);
             });
         }
-    
+        
+        async function fetchCGPAData() {
+            const cgpaData = {
+                '0.00-1.99': 0,
+                '2.00-2.49': 0,
+                '2.50-2.99': 0,
+                '3.00-3.49': 0,
+                '3.50-4.00': 0
+            };
+
+            const modes = ['octFull', 'juneFull', 'febFull', 'octPart', 'junePart', 'febPart'];
+
+            // Function to fetch CGPA data for a specific mode
+            async function fetchModeData(mode) {
+                const studentsRef = ref(db, 'StudentInfo');
+                const snapshot = await get(studentsRef);
+
+                if (snapshot.exists()) {
+                    const students = snapshot.val();
+                    Object.values(students).forEach((student) => {
+                        if (student.courseStatus?.['gpa-result']?.[mode]?.cgpa) {
+                            const cgpa = parseFloat(student.courseStatus['gpa-result'][mode].cgpa);
+                            if (!isNaN(cgpa)) {
+                                if (cgpa >= 0.00 && cgpa <= 1.99) {
+                                    cgpaData['0.00-1.99']++;
+                                } else if (cgpa > 1.99 && cgpa <= 2.49) {
+                                    cgpaData['2.00-2.49']++;
+                                } else if (cgpa > 2.49 && cgpa <= 2.99) {
+                                    cgpaData['2.50-2.99']++;
+                                } else if (cgpa > 2.99 && cgpa <= 3.49) {
+                                    cgpaData['3.00-3.49']++;
+                                } else if (cgpa > 3.49 && cgpa <= 4.00) {
+                                    cgpaData['3.50-4.00']++;
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.error('No students found');
+                }
+            }
+
+            async function fetchData() {
+                for (let i = 0; i < modes.length; i++) {
+                    await fetchModeData(modes[i]);
+                }
+
+                console.log('CGPA Data:', cgpaData); // Debugging statement
+                updateCGPABarChart(cgpaData); // Update chart after fetching data
+            }
+
+            // Initiate data fetching
+            fetchData().catch(error => {
+                console.error('Error fetching students:', error);
+            });
+        }
+
+        function updateCGPABarChart(data) {
+            var ctx = document.getElementById("myBarChart").getContext('2d');
+
+            var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['0.00-1.99', '2.00-2.49', '2.50-2.99', '3.00-3.49', '3.50-4.00'],
+                    datasets: [{
+                        label: 'Number of Students',
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#f6bf26', '#e74a3b'],
+                        borderColor: "rgba(234, 236, 244, 1)",
+                        borderWidth: 2,
+                        data: [
+                            data['0.00-1.99'],
+                            data['2.00-2.49'],
+                            data['2.50-2.99'],
+                            data['3.00-3.49'],
+                            data['3.50-4.00']
+                        ],
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 5
+                            },
+                            maxBarThickness: 25,
+                        },
+                        y: {
+                            ticks: {
+                                min: 0,
+                                max: Math.max(...Object.values(data)) + 5,
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                callback: function(value) {
+                                    return value;
+                                }
+                            },
+                            grid: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "rgb(60, 65, 86)",
+                            bodyFontColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 0,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.dataset.label + ': ' + tooltipItem.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        }
+
+        window.addEventListener('load', fetchCGPAData);
+
         // Function to sign out user
         function signOut() {
             sessionStorage.removeItem("user-creds");

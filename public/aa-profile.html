@@ -11,6 +11,52 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/sidebar.css" />
     <link rel="stylesheet" href="css/styles-2.css" />
+    <style>
+        #mainContent {
+            width: 100%; /* Ensure it takes full width of the container */
+            max-width: 600px; /* Limit maximum width */
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px auto; /* Center align and provide space around */
+        }
+    
+        h2 {
+            margin-bottom: 20px;
+        }
+    
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px; /* Space between label and input */
+            display: block; /* Ensure labels are on a new line */
+        }
+    
+        .form-control {
+            border: none;
+            background: #e9ecef;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200%; /* Full width for inputs */
+            box-sizing: border-box; /* Include padding in width calculation */
+            font-size: 14px; /* Adjust font size for inputs */
+        }
+    
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #ffffff; /* Text color */
+            padding: 10px 20px; /* Adjust padding for button */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+    
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
@@ -60,6 +106,7 @@
                         <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
                         <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
                         <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                        <li><a href="aa-performance.html" class="nav_link sublink">Student performance</a></li>
                     </ul>
                 </li>
                 <li class="item">
@@ -122,21 +169,15 @@
             <div class="col-md-6">
                 <label class="form-label">Name:</label>
                 <span id="displayName" class="form-control"></span>
-                <br>
                 <label class="form-label">Email:</label>
                 <span id="displayEmail" class="form-control"></span>
-                <br>
                 <label class="form-label">Phone Number:</label>
                 <span id="displayPhone" class="form-control"></span>
-                <br>
                 <label class="form-label">Role:</label>
                 <span id="displayRole" class="form-control"></span>
-                <br>
                 <label class="form-label">Location:</label>
                 <span id="displayLocation" class="form-control"></span>
-                <br>
-                
-                <button id="editProfileButton" class="btn btn-primary me-2">Edit Profile</button>
+                <button id="editProfileButton" class="btn btn-primary mt-3">Edit Profile</button>
             </div>
         </div>
     </div>

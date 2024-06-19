@@ -6,9 +6,38 @@
     <title>Retrieve Courses by Semester</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/sidebar.css" />
+    <style>
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .course {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .course h3 {
+            margin-top: 0;
+        }
+        .semester-header {
+            background: #7695b0;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .semester-divider {
+            height: 2px;
+            background: #7695b0;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <!-- Sidebar -->
@@ -57,6 +86,7 @@
                         <li><a href="aa-addstudent.html" class="nav_link sublink">Add new student</a></li>
                         <li><a href="aa-student-list.html" class="nav_link sublink">Student list</a></li>
                         <li><a href="aa-studentcourse.html" class="nav_link sublink">Student course</a></li>
+                        <li><a href="aa-performance.html" class="nav_link sublink">Student performance</a></li>
                     </ul>
                 </li>
                 <li class="item">
@@ -113,7 +143,7 @@
     </nav>
 
     <div class="container mt-5">
-        <h1 class="mb-4">View course by semester</h1><br>
+        <h1 class="mb-4">View Courses by Semester</h1><br>
 
         <div class="form-group">
             <label for="program">Select Program:</label>
@@ -166,13 +196,9 @@
                     for (let i = 1; i <= numSemesters; i++) {
                         const semester = selectedProgram + '-sem' + i;
                         const semesterHeader = document.createElement('h2');
-                        semesterHeader.textContent = semester;
+                        semesterHeader.textContent = `Semester ${i}`;
+                        semesterHeader.classList.add('semester-header');
                         courseList.appendChild(semesterHeader);
-
-                        // Add line separator
-                        const divider = document.createElement('div');
-                        divider.classList.add('semesterDivider');
-                        courseList.appendChild(divider);
 
                         snapshot.forEach((childSnapshot) => {
                             const course = childSnapshot.val();
@@ -203,7 +229,9 @@
                         });
 
                         // Add line separator
-                        courseList.appendChild(divider.cloneNode(true));
+                        const divider = document.createElement('div');
+                        divider.classList.add('semester-divider');
+                        courseList.appendChild(divider);
                     } 
                 } else {
                     const courseList = document.getElementById('courseList');
@@ -215,7 +243,7 @@
         }
 
         // Function to sign out user
-            function signOut() {
+        function signOut() {
             sessionStorage.removeItem("user-creds");
             sessionStorage.removeItem("user-info");
             window.location.href = 'index.html';
