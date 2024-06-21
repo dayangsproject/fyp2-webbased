@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- backup functional update modal -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Students by Course</title>
@@ -134,18 +135,20 @@
         </table>
     </div>
 
-    <!-- View Modal -->
+    <!-- Modal for viewing courses -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Courses Taken</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Display list of courses taken -->
-                    <ul id="coursesTakenList"></ul>
+                    <ul id="coursesTakenList" class="list-group list-group-flush"></ul>
                 </div>
-                
                 <div class="modal-footer">
                     <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -153,16 +156,19 @@
         </div>
     </div>
 
-    <!-- Modal for updating course -->
+    <!-- Modal for updating courses -->
     <div class="modal fade" id="coursesNotTakenModal" tabindex="-1" role="dialog" aria-labelledby="coursesNotTakenModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="coursesNotTakenModalTitle">Courses Not Taken</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Display list of courses not taken -->
-                    <ul id="coursesNotTakenList"></ul>
+                    <ul id="coursesNotTakenList" class="list-group list-group-flush"></ul>
                 </div>
                 <div class="modal-footer">
                     <button id="closeNotTakenModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -298,24 +304,9 @@
                                     '<button class="btn btn-success add-course-btn">Add</button>' + '  ' +
                                     '<button class="btn btn-danger remove-course-btn">Remove</button>'; 
 
-            // Add event listener to the button for opening the modal
+            // Event listener for the View button
             actionCell.querySelector('.view-edit-btn').addEventListener('click', function() {
-                // Retrieve list of courses taken by the student
-                const coursesTakenList = document.getElementById('coursesTakenList');
-                coursesTakenList.innerHTML = ''; // Clear previous courses list
-
-                // Retrieve courses taken from the database
-                const studentRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
-                get(studentRef).then((snapshot) => {
-                    snapshot.forEach((courseSnapshot) => {
-                        const courseCode = courseSnapshot.val();
-                        const listItem = document.createElement('li');
-                        listItem.textContent = courseCode;
-                        coursesTakenList.appendChild(listItem);
-                    });
-                });
-
-                // Show the modal
+                retrieveCoursesTaken(matricNo);
                 $('#exampleModalCenter').modal('show');
             });
 
@@ -356,49 +347,62 @@
                 $('#coursesNotTakenModal').modal('show');
             });
 
-            // Add event listener to the Remove Course button
+            // Event listener for the Remove button
             actionCell.querySelector('.remove-course-btn').addEventListener('click', function() {
-                // Handle the logic to remove courses
-                // You can prompt the user to confirm the removal before actually removing the course
-                const courseToRemove = prompt("Enter the course code to remove:");
-                if (courseToRemove) {
-                    const studentCourseRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
-                    get(studentCourseRef).then((snapshot) => {
-                        snapshot.forEach((courseSnapshot) => {
-                            if (courseSnapshot.val() === courseToRemove) {
-                                const courseKey = courseSnapshot.key; // Get the key of the course to be removed
-                                console.log("Course Key:", courseKey); // Log the course key to check if it's correct
-                                
-                                // Construct reference to the course to remove
-                                const courseRefToRemove = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken/${courseKey}`);
+                selectedMatricNo = matricNo; // Store the matricNo
 
-                                // Remove the course from the database
-                                remove(courseRefToRemove)
-                                    .then(() => {
-                                        console.log("Course removed successfully!");
-                                        // Refresh the list of courses taken in the modal
-                                        retrieveCoursesTaken(matricNo);
-                                    })
-                                    .catch((error) => {
-                                        console.error("Error removing course: ", error);
-                                        alert("An error occurred while removing the course. Please try again.");
-                                    });
-                            }
-                        });
-                    });
-                }
-                
+                // Retrieve list of courses taken by the student
+                const coursesTakenListModal = document.getElementById('coursesTakenListModal');
+                coursesTakenListModal.innerHTML = ''; // Clear previous courses list
 
+                // Retrieve the student data from the database
+                const studentRef = ref(db, 'StudentInfo/' + matricNo);
+                get(studentRef).then((studentSnapshot) => {
+                    const student = studentSnapshot.val(); // Retrieve the student data
+
+                    // Check if the student data is available
+                    if (student) {
+                        // Retrieve all courses taken by the student
+                        if (student.courseStatus && student.courseStatus.courseTaken) {
+                            student.courseStatus.courseTaken.forEach((courseCode) => {
+                                const listItem = document.createElement('li');
+                                listItem.innerHTML = `<label><input type="checkbox" value="${courseCode}" /> ${courseCode}</label>`;
+                                listItem.classList.add('selectable-course');
+                                coursesTakenListModal.appendChild(listItem);
+                            });
+                        }
+                    } else {
+                        console.error('Student data not found.');
+                    }
+                });
+
+                // Show the modal
+                $('#manageCoursesModal').modal('show');
             });
         }
 
-        // Event listener to toggle the 'selected' class when a course is clicked
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('selectable-course')) {
-                // Toggle the 'selected' class on the clicked course
-                event.target.classList.toggle('selected');
-            }
-        });
+        // Function to retrieve and display courses taken by the student
+        function retrieveCoursesTaken(matricNo) {
+            const coursesTakenList = document.getElementById('coursesTakenList');
+            coursesTakenList.innerHTML = ''; // Clear previous courses list
+
+            const studentRef = ref(db, 'StudentInfo/' + matricNo);
+            get(studentRef).then((snapshot) => {
+                const student = snapshot.val();
+                if (student && student.courseStatus && student.courseStatus.courseTaken) {
+                    student.courseStatus.courseTaken.forEach((courseCode) => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = courseCode;
+                        coursesTakenList.appendChild(listItem);
+                    });
+                } else {
+                    coursesTakenList.innerHTML = '<li>No courses taken</li>';
+                }
+            }).catch((error) => {
+                console.error('Error fetching courses:', error);
+                coursesTakenList.innerHTML = '<li>Error fetching courses</li>';
+            });
+        }
 
         // Add event listener to the Add Course button inside the coursesNotTakenModal
         document.getElementById('addCourseBtn').addEventListener('click', function() {
@@ -433,71 +437,49 @@
             }
         });
 
-        // Add event listener to the "Remove Course" button inside the modal
-        document.getElementById('removeCourseBtn').addEventListener('click', function() {
-            // Get the selected course to remove
-            const courseToRemove = prompt("Enter the course code to remove:");
 
-            if (courseToRemove) {
-                // Remove the selected course from the database
-                const studentCourseRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
-                get(studentCourseRef).then((snapshot) => {
-                    snapshot.forEach((courseSnapshot) => {
-                        if (courseSnapshot.val() === courseToRemove) {
-                            courseSnapshot.ref.remove()
-                                .then(() => {
-                                    console.log("Course removed successfully!");
-                                    // Refresh the list of courses taken in the modal
-                                    retrieveCoursesTaken(matricNo);
-                                })
-                                .catch((error) => {
-                                    console.error("Error removing course: ", error);
-                                    alert("An error occurred while removing the course. Please try again.");
-                                });
-                        }
+        // Function to remove selected courses from the student
+        document.getElementById('removeCourseBtn').addEventListener('click', function() {
+            const selectedCourses = document.querySelectorAll('#coursesTakenListModal input[type="checkbox"]:checked');
+            if (selectedCourses.length > 0) {
+                const coursesToRemove = Array.from(selectedCourses).map(courseCheckbox => courseCheckbox.value);
+                if (selectedMatricNo) { // Use the stored matricNo
+                    const studentCourseRef = ref(db, `StudentInfo/${selectedMatricNo}/courseStatus/courseTaken`);
+                    get(studentCourseRef).then((snapshot) => {
+                        const existingCourses = snapshot.val() || [];
+                        const updatedCourses = existingCourses.filter(course => !coursesToRemove.includes(course));
+                        update(studentCourseRef, updatedCourses)
+                            .then(() => {
+                                console.log("Courses removed successfully!");
+                                // Refresh the list of courses taken in the modal
+                                retrieveCoursesTaken(selectedMatricNo);
+                                // Clear the selected courses
+                                selectedCourses.forEach(courseCheckbox => courseCheckbox.checked = false);
+                                // Close the modal
+                                $('#manageCoursesModal').modal('hide');
+                            })
+                            .catch((error) => {
+                                console.error("Error removing courses: ", error);
+                                alert("An error occurred while removing the courses. Please try again.");
+                            });
                     });
-                });
+                } else {
+                    alert("Matric No not found. Please try again.");
+                }
+            } else {
+                alert("Please select at least one course to remove.");
             }
         });
 
-        // Function to retrieve and display courses taken by the student
-        function retrieveCoursesTaken(matricNo) {
-            const coursesTakenListModal = document.getElementById('coursesTakenListModal');
-            coursesTakenListModal.innerHTML = ''; // Clear previous courses list
-
-            // Retrieve courses taken from the database
-            const studentRef = ref(db, `StudentInfo/${matricNo}/courseStatus/courseTaken`);
-            get(studentRef).then((snapshot) => {
-                snapshot.forEach((courseSnapshot) => {
-                    const courseCode = courseSnapshot.val();
-                    const listItem = document.createElement('li');
-                    listItem.textContent = courseCode;
-                    coursesTakenListModal.appendChild(listItem);
-                });
-            });
-        }
-
-        // Populate courses dropdown on page load
-        populateCourses();
-
-        // Function to sign out user
-        function signOut() {
-            sessionStorage.removeItem("user-creds");
-            sessionStorage.removeItem("user-info");
-            window.location.href = 'index.html';
-        }
-
-        // Event listener to sign out user
-        const signOutButton = document.getElementById('signOutButton');
-        signOutButton.addEventListener('click', signOut);
-
-        // Add event listener to course dropdown
+        // Event listener for course dropdown change
         document.getElementById('courseSelect').addEventListener('change', retrieveStudents);
+
+        // Initialize the course dropdown on page load
+        window.addEventListener('load', populateCourses);
     </script>
 
-    <!-- Add jQuery and Bootstrap JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="js/sidebar.js"></script>
 </body>
 </html>

@@ -195,7 +195,7 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="modeInput" class="form-label">Intake/Mode:</label>
+                    <label for="modeInput" class="form-label">Mode:</label>
                     <select id="modeInput" class="form-select">
                         <option value=" "> </option>
                         <option value="febFull">February Full Time</option>
@@ -244,6 +244,13 @@
         let admissionInput = document.getElementById('admissionInput');
         let modeInput = document.getElementById('modeInput');
 
+        matricNoInput.addEventListener('input', handleData);
+        phoneNumberInput.addEventListener('input', handleData);
+        statusInput.addEventListener('change', handleData);
+        admissionInput.addEventListener('change', handleData);
+        modeInput.addEventListener('change', handleData);
+
+
         let AddButton = document.getElementById('AddButton');
 
         let userCreds;
@@ -257,19 +264,24 @@
             }       
 
             RetPage();
+            handleData(); // Call handleData to set initial button state
         });
 
-        // Function to handle both adding and updating data
         function handleData() {
-            const matricNo = matricNoInput.value;
-            if (!matricNo) {
-                // If matric number is not provided, call AddData
-                AddData();
+            const matricNo = matricNoInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+            const status = statusInput.value.trim();
+            const admission = admissionInput.value.trim();
+            const mode = modeInput.value.trim();
+
+            // Check if any of the required fields are empty
+            if (matricNo === '' || phoneNumber === '' || status === '' || admission === '' || mode === '') {
+                AddButton.disabled = true; // Disable the Save button
             } else {
-                // If matric number is provided, call UpdateData
-                UpdateData();
+                AddButton.disabled = false; // Enable the Save button
             }
         }
+
 
         // using matric to save student data
         // function to add student data
