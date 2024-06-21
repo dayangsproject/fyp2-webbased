@@ -134,18 +134,20 @@
         </table>
     </div>
 
-    <!-- View Modal -->
+    <!-- Modal for viewing courses -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Courses Taken</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Display list of courses taken -->
-                    <ul id="coursesTakenList"></ul>
+                    <ul id="coursesTakenList" class="list-group list-group-flush"></ul>
                 </div>
-                
                 <div class="modal-footer">
                     <button id="closeModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
@@ -153,16 +155,19 @@
         </div>
     </div>
 
-    <!-- Modal for updating course -->
+    <!-- Modal for updating courses -->
     <div class="modal fade" id="coursesNotTakenModal" tabindex="-1" role="dialog" aria-labelledby="coursesNotTakenModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="coursesNotTakenModalTitle">Courses Not Taken</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- Display list of courses not taken -->
-                    <ul id="coursesNotTakenList"></ul>
+                    <ul id="coursesNotTakenList" class="list-group list-group-flush"></ul>
                 </div>
                 <div class="modal-footer">
                     <button id="closeNotTakenModalBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -298,7 +303,7 @@
                                     '<button class="btn btn-success add-course-btn">Add</button>' + '  ' +
                                     '<button class="btn btn-danger remove-course-btn">Remove</button>'; 
 
-            // Add event listener to the button for opening the modal
+            // Event listener for the View button
             actionCell.querySelector('.view-edit-btn').addEventListener('click', function() {
                 // Retrieve list of courses taken by the student
                 const coursesTakenList = document.getElementById('coursesTakenList');
@@ -309,15 +314,30 @@
                 get(studentRef).then((snapshot) => {
                     snapshot.forEach((courseSnapshot) => {
                         const courseCode = courseSnapshot.val();
-                        const listItem = document.createElement('li');
-                        listItem.textContent = courseCode;
-                        coursesTakenList.appendChild(listItem);
+                        
+                        // Retrieve course details from CourseInfo using courseCode
+                        const courseInfoRef = ref(db, `CourseInfo/${courseCode}`);
+                        get(courseInfoRef).then((courseInfoSnapshot) => {
+                            if (courseInfoSnapshot.exists()) {
+                                const courseName = courseInfoSnapshot.val().courseName;
+                                const listItem = document.createElement('li');
+                                listItem.textContent = `${courseCode} ${courseName}`;
+                                coursesTakenList.appendChild(listItem);
+                            } else {
+                                console.warn(`Course ${courseCode} details not found.`);
+                            }
+                        }).catch((error) => {
+                            console.error(`Error fetching course details for ${courseCode}:`, error);
+                        });
                     });
+                }).catch((error) => {
+                    console.error('Error fetching courses taken:', error);
                 });
 
                 // Show the modal
                 $('#exampleModalCenter').modal('show');
             });
+
 
             // Event listener for the Add button
             actionCell.querySelector('.add-course-btn').addEventListener('click', function() {
@@ -338,10 +358,11 @@
                         const allCoursesRef = ref(db, 'CourseInfo');
                         get(allCoursesRef).then((snapshot) => {
                             snapshot.forEach((courseSnapshot) => {
-                                const courseCode = courseSnapshot.val().courseCode;
+                                const courseCode = courseSnapshot.val().courseCode; // Retrieve course code
+                                const courseName = courseSnapshot.val().courseName; // Retrieve course name
                                 if (student.courseStatus && student.courseStatus.courseTaken && !student.courseStatus.courseTaken.includes(courseCode)) {
                                     const listItem = document.createElement('li');
-                                    listItem.innerHTML = `<label><input type="checkbox" value="${courseCode}" /> ${courseCode}</label>`;
+                                    listItem.innerHTML = `<label><input type="checkbox" value="${courseCode}" /> ${courseCode} ${courseName}</label>`;
                                     listItem.classList.add('selectable-course');
                                     coursesNotTakenList.appendChild(listItem);
                                 }
